@@ -52,20 +52,20 @@ class Loggable(BaseLoggable):
 
     def log_hyperparams(self) -> dict:
         return {
-            **{k: v.log_hyperparams() for k, v in self.log_collect()},
+            **{k: v.log_hyperparams() for k, v in self.log_collect().items()},
             **self.log_local_hyperparams(),
         }
 
     def log_epoch(self) -> dict:
         return {
-            **{k: v.log_epoch() for k, v in self.log_collect()},
+            **{k: v.log_epoch() for k, v in self.log_collect().items()},
             **self.log_local_epoch(),
         }
 
     def log_snapshot(self) -> dict:
         if isinstance(self, torch.nn.Module):
             return {"state_dict": self.state_dict()}
-        return {k: v.log_snapshot() for k, v in self.log_collect()}
+        return {k: v.log_snapshot() for k, v in self.log_collect().items()}
 
     def load_snapshot(self, snapshot: dict) -> None:
         raise NotImplementedError

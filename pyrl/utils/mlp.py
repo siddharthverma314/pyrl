@@ -9,8 +9,8 @@ class MLP(nn.Module, Loggable):
     def __init__(
         self,
         input_dim: int,
-        output_dim: int,
         hidden_dim: List[int],
+        output_dim: int,
         output_mod=None,
     ) -> None:
         nn.Module.__init__(self)

@@ -1,23 +1,6 @@
-from pyrl.utils import Flatten, Unflatten, torchify
+from pyrl.utils import Flatten, Unflatten, torchify, create_random_space
 from torch.nn import Sequential
-from gym.spaces import Dict, Box, MultiDiscrete, Discrete
-import numpy as np
 import torch
-
-
-def create_random_space():
-    choice = np.random.randint(4)
-    if choice == 0:
-        dim = np.random.randint(5)
-        return Box(low=-5*np.ones(dim, dtype=np.float32), high=5*np.ones(dim, dtype=np.float32))
-    elif choice == 1:
-        return Dict({"a": create_random_space(), "b": create_random_space()})
-    elif choice == 2:
-        return Discrete(np.random.randint(5) + 2)
-    elif choice == 3:
-        return MultiDiscrete([np.random.randint(5) + 2 for _ in range(np.random.randint(10) + 1)])
-    else:
-        raise NotImplementedError()
 
 
 def custom_equals(a, b):
