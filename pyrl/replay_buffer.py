@@ -1,77 +1,63 @@
-import numpy as np
-import torch
-import gym
 import cpprb
-from flatten_dict import flatten, unflatten
-from .logger import Loggable
+import torch
+import numpy as np
+from gym import Space
+from pyrl.logger import simpleloggable
+from pyrl.utils import untorchify, torchify, Flatten, Unflatten
 
 
-def space_to_spec(space: gym.Space) -> dict:
-    if isinstance(space, gym.spaces.Dict):
-        obs_spec = {}
-        for k, v in space.spaces.items():
-            obs_spec[k] = space_to_spec(v)
-        return obs_spec
-    elif isinstance(space, gym.spaces.Box):
-        return (np.float32, space.low.shape)
-    elif isinstance(space, gym.spaces.Discrete):
-        return (np.int32, 1)
-    elif isinstance(space, gym.spaces.MultiDiscrete):
-        return (np.int32, space.shape)
-    else:
-        raise NotImplementedError
+@simpleloggable
+class ReplayBuffer:
+    def __init__(
+        self,
+        obs_spec: Space,
+        act_spec: Space,
+        _capacity: int,
+        _batch_size: int,
+        _device: str,
+    ):
+        self.obs_flat = Flatten(obs_spec)
+        self.obs_unflat = Unflatten(obs_spec)
+        self.act_flat = Flatten(act_spec)
+        self.act_unflat = Unflatten(act_spec)
 
-
-class ReplayBuffer(Loggable):
-    def __init__(self, env: gym.Env, capacity: int, batch_size: int, device: str):
-        obs_spec = space_to_spec(env.observation_space)
-        act_spec = space_to_spec(env.action_space)
         spec = {
-            "obs": obs_spec,
-            "act": act_spec,
-            "next_obs": obs_spec,
-            "rew": (np.float32, 1),
-            "done": (np.float32, 1),
-        }
-        spec = {
-            k: {"dtype": d, "shape": s}
-            for k, (d, s) in flatten(spec, reducer="dot").items()
+            "obs": {"dtype": np.float32, "shape": self.obs_flat.dim},
+            "act": {"dtype": np.float32, "shape": self.act_flat.dim},
+            "next_obs": {"dtype": np.float32, "shape": self.obs_flat.dim},
+            "rew": {"dtype": np.float32, "shape": 1},
+            "done": {"dtype": np.float32, "shape": 1},
         }
 
-        self.buffer: cpprb.ReplayBuffer = cpprb.create_buffer(capacity, spec)
-        self.capacity = capacity  # only for logging
-        self.batch_size = batch_size
-        self.device = torch.device(device)
-
-        self._hyp = {
-            "capacity": capacity,
-            "batch_size": batch_size,
-            "device": device,
-        }
+        self.buffer: cpprb.ReplayBuffer = cpprb.create_buffer(_capacity, spec)
+        self.batch_size = _batch_size
+        self.device = torch.device(_device)
 
     def __len__(self):
         return len(self.buffer)
 
-    def add(self, step):
-        step = flatten(step, reducer="dot")
-        step = {k: v.detach().cpu().numpy() for k, v in step.items()}
-
-        self.buffer.add(**step)
+    def add(self, batch):
+        self.buffer.add(
+            **untorchify(
+                {
+                    "obs": self.obs_flat(batch["obs"]),
+                    "act": self.act_flat(batch["act"]),
+                    "next_obs": self.obs_flat(batch["next_obs"]),
+                    "rew": batch["rew"],
+                    "done": batch["done"],
+                }
+            )
+        )
 
     def sample(self, batch_size=None):
         if not batch_size:
             batch_size = self.batch_size
 
-        return unflatten(
-            {
-                k: torch.tensor(v).to(self.device)
-                for k, v in self.buffer.sample(batch_size).items()
-            },
-            splitter="dot",
-        )
-
-    def log_local_hyperparams(self):
-        return self._hyp
-
-    def log_local_epoch(self):
-        return {}
+        batch = torchify(self.buffer.sample(batch_size), self.device)
+        return {
+            "obs": self.obs_unflat(batch["obs"]),
+            "act": self.act_unflat(batch["act"]),
+            "next_obs": self.obs_unflat(batch["next_obs"]),
+            "rew": batch["rew"],
+            "done": batch["done"],
+        }

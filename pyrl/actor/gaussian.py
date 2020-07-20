@@ -2,7 +2,7 @@ from typing import List, Tuple, Union
 import torch
 from torch import nn, distributions as pyd
 from gym import Space
-from pyrl.utils import MLP, Flatten, flatdim
+from pyrl.utils import MLP, Flatten, Unflatten, flatdim
 
 from pyrl.logger import simpleloggable
 
@@ -38,18 +38,31 @@ class GaussianActor(nn.Module):
     ) -> None:
         nn.Module.__init__(self)
 
-        obs_dim = flatdim(obs_spec)
-        act_dim = flatdim(act_spec)
-        
+        self.obs_flat = Flatten(obs_spec)
+        self.act_flat = Flatten(act_spec)
+        self.act_unflat = Unflatten(act_spec)
+
         self.log_std_bounds = _log_std_bounds
-        self.preprocess = Flatten(obs_spec)
-        self.policy = MLP(obs_dim, hidden_dim, act_dim * 2)
+        self.policy = MLP(self.obs_flat.dim, hidden_dim, self.act_flat.dim * 2)
         self.dist = SquashedNormal if _use_squashed_normal else pyd.Normal
-        self.outputs = dict()
+
+    def log_prob(self, obs, act):
+        dist = self.forward(obs)
+        act = self.act_flat(act)
+        return dist.log_prob(act)
+
+    def action(self, obs, deterministic=False):
+        # get dist
+        dist = self.forward(obs)
+        if deterministic:
+            action = dist.mean
+        else:
+            action = dist.rsample()
+        return self.act_unflat(action)
 
     def forward(self, obs) -> pyd.Distribution:
         # flatten
-        obs = self.preprocess(obs)
+        obs = self.obs_flat(obs)
 
         # get mu and log_std
         mu, log_std = self.policy(obs).chunk(2, dim=-1)

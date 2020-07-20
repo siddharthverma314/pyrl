@@ -82,6 +82,10 @@ class Flatten(torch.nn.Module):
         else:
             raise NotImplementedError
 
+    @property
+    def dim(self) -> int:
+        return flatdim(self.space)
+
     def forward(self, x):
         return self.flatten(self.space, x)
 
@@ -124,6 +128,10 @@ class Unflatten(torch.nn.Module):
             return torch.cat(outputs, dim=1)
         else:
             raise NotImplementedError
+
+    @property
+    def dim(self) -> int:
+        return flatdim(self.space)
 
     def forward(self, x):
         return self.unflatten(self.space, x)
