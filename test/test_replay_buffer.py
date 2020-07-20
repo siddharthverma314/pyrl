@@ -1,6 +1,7 @@
 from pyrl.utils import create_random_space, torchify
 from pyrl.replay_buffer import ReplayBuffer
 from flatten_dict import flatten
+import torch
 
 
 def test_integration():
@@ -26,6 +27,6 @@ def test_integration():
         step2 = flatten(step2)
         assert step.keys() == step2.keys()
         for k in step:
-            assert step[k].cpu().shape == step2[k].cpu().shape
+            assert torch.all(step[k].cpu() == step2[k].cpu())
 
         print(buf.log_epoch())

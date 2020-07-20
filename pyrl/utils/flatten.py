@@ -91,22 +91,23 @@ class Flatten(torch.nn.Module):
 
 
 class Unflatten(torch.nn.Module):
-    def __init__(self, space):
+    def __init__(self, space, is_logits=True):
         super().__init__()
         self.space = space
+        self.is_logits = is_logits
 
-    @staticmethod
-    def unflatten(space, x):
-        "Makes a random choice if necessary"
-
+    def unflatten(self, space, x):
         if isinstance(space, Box):
             return x
         elif isinstance(space, Discrete):
-            return pyd.Categorical(logits=x).sample((1,))
+            if self.is_logits:
+                return pyd.Categorical(logits=x).sample((1,))
+            else:
+                return pyd.Categorical(probs=x).sample((1,))
         elif isinstance(space, Tuple):
             list_flattened = torch.split(x, list(map(flatdim, space.spaces)), dim=-1)
             list_unflattened = [
-                Unflatten.unflatten(s, flattened)
+                self.unflatten(s, flattened)
                 for flattened, s in zip(list_flattened, space.spaces)
             ]
             return tuple(list_unflattened)
@@ -115,7 +116,7 @@ class Unflatten(torch.nn.Module):
                 x, list(map(flatdim, space.spaces.values())), dim=-1
             )
             list_unflattened = [
-                (key, Unflatten.unflatten(s, flattened))
+                (key, self.unflatten(s, flattened))
                 for flattened, (key, s) in zip(list_flattened, space.spaces.items())
             ]
             return OrderedDict(list_unflattened)
@@ -124,7 +125,10 @@ class Unflatten(torch.nn.Module):
         elif isinstance(space, MultiDiscrete):
             outputs = []
             for t in torch.split(x, space.nvec.tolist(), dim=1):
-                outputs.append(pyd.Categorical(logits=t).sample((1,)))
+                if self.is_logits:
+                    outputs.append(pyd.Categorical(logits=t).sample((1,)))
+                else:
+                    outputs.append(pyd.Categorical(probs=t).sample((1,)))
             return torch.cat(outputs, dim=1)
         else:
             raise NotImplementedError
