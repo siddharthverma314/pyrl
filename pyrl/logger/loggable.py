@@ -85,16 +85,12 @@ def simpleloggable(cls):
 
     """
 
-    #@wraps(cls)
+    # @wraps(cls)
     class newcls(cls, Loggable):
         def __init__(self, *args, **kwargs):
             cls.__init__(self, *args, **kwargs)
             Loggable.__init__(self)
-            args = (
-                inspect.signature(super().__init__)
-                .bind(*args, **kwargs)
-                .arguments
-            )
+            args = inspect.signature(super().__init__).bind(*args, **kwargs).arguments
             self.__log_hyperparams = {
                 k[1:]: v for k, v in args.items() if k.startswith("_")
             }

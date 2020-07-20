@@ -2,6 +2,7 @@ from typing import Dict
 from .loggable import Loggable
 import torch
 
+
 def consolidate_stats(items) -> Dict[str, float]:
     """Take a list of items and return their statistics (mean, std, min, max)"""
 

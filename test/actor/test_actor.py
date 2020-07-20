@@ -7,7 +7,9 @@ import numpy as np
 
 
 def test_integration():
-    obs_spec = Box(low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32))
+    obs_spec = Box(
+        low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32)
+    )
     act_spec = Box(low=np.zeros(3, dtype=np.float32), high=np.ones(3, dtype=np.float32))
     actor = GaussianActor(obs_spec, act_spec, [60, 50])
     obs = torch.rand((100, 10))
@@ -26,7 +28,9 @@ def test_random_space():
 
 
 def test_log():
-    obs_spec = Box(low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32))
+    obs_spec = Box(
+        low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32)
+    )
     act_spec = Box(low=np.zeros(3, dtype=np.float32), high=np.ones(3, dtype=np.float32))
     actor = GaussianActor(obs_spec, act_spec, [60, 50])
     obs = torch.rand((100, 10))

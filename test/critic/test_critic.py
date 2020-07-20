@@ -4,8 +4,11 @@ from gym.spaces import Box
 import numpy as np
 import torch
 
+
 def test_integration():
-    obs_spec = Box(low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32))
+    obs_spec = Box(
+        low=np.zeros(10, dtype=np.float32), high=np.ones(10, dtype=np.float32)
+    )
     act_spec = Box(low=np.zeros(3, dtype=np.float32), high=np.ones(3, dtype=np.float32))
     c1 = DoubleQCritic(obs_spec, act_spec, [60, 50])
     c2 = DoubleVCritic(obs_spec, [60, 50])

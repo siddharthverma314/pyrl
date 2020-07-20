@@ -1,4 +1,3 @@
-import torch
 from pyrl.utils import create_random_space, torchify
 from pyrl.replay_buffer import ReplayBuffer
 from flatten_dict import flatten

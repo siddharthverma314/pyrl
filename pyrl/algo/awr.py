@@ -83,15 +83,21 @@ class AWR(Loggable):
         dist = self.actor(obs)
         log_prob = dist.log_prob(act).sum(-1, keepdim=True)
 
-        weight = torch.exp(
-            1
-            / self.beta
-            * (
-                rew
-                + self.discount * (1.0 - done) * self.critic_target.forward(next_obs)
-                - self.critic_target.forward(obs)
+        weight = (
+            torch.exp(
+                1
+                / self.beta
+                * (
+                    rew
+                    + self.discount
+                    * (1.0 - done)
+                    * self.critic_target.forward(next_obs)
+                    - self.critic_target.forward(obs)
+                )
             )
-        ).clamp(max=self.max_weight).detach()
+            .clamp(max=self.max_weight)
+            .detach()
+        )
         actor_loss = -(log_prob * weight).mean()
 
         self._epoch_log["actor"] = {

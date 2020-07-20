@@ -3,7 +3,7 @@ from pyrl.logger import simpleloggable
 
 def test_loggable():
     @simpleloggable
-    class Test():
+    class Test:
         def __init__(self, nolog, _log):
             pass
 
