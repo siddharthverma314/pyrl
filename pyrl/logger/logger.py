@@ -106,7 +106,7 @@ class Logger:
 
         if self.logdir:
             for k, v in epoch.items():
-                if torch.isscalar(v)
+                if torch.isscalar(v):
                     self.sw.add_scalar(k, v.item(), self._epoch_num)
                 else:
                     self.sw.add_histogram(k, v, self._epoch_num)

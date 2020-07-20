@@ -85,10 +85,11 @@ def simpleloggable(cls):
 
     """
 
-    @wraps(cls)
+    #@wraps(cls)
     class newcls(cls, Loggable):
         def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+            cls.__init__(self, *args, **kwargs)
+            Loggable.__init__(self)
             args = (
                 inspect.signature(super().__init__)
                 .bind(*args, **kwargs)
