@@ -1,5 +1,5 @@
 from __future__ import annotations
-from .utils import Container
+from .utils import Container, consolidate_stats
 from torch.utils.tensorboard import SummaryWriter
 from pathlib import Path
 from tabulate import tabulate
@@ -104,15 +104,19 @@ class Logger:
         self.log("Logging epoch {}".format(self._epoch_num))
         epoch = flatten(self.modules.log_epoch(), reducer="path")
 
-        if self.logdir:
-            for k, v in epoch.items():
-                if torch.isscalar(v):
-                    self.sw.add_scalar(k, v.item(), self._epoch_num)
-                else:
-                    self.sw.add_histogram(k, v, self._epoch_num)
+        # first check for histograms
+        for k, v in epoch.items():
+            if v.squeeze().dim() > 0:
+                self.sw.add_histogram(k, v, self._epoch_num)
+                epoch[k] = consolidate_stats(v)
 
-        epoch = [(k, v) for k, (t, v) in epoch.items() if t == LogType.SCALAR]
-        self.log("params:\n" + tabulate(epoch))
+        # next, log scalars
+        epoch = flatten(epoch, reducer="path")
+        epoch = {k: v.item() for k, v in epoch.items()}
+        for k, v in epoch.items():
+            self.sw.add_scalar(k, v, self._epoch_num)
+
+        self.log("params:\n" + tabulate([(k, v) for k, v in epoch.items()]))
 
     def log_snapshot(self):
         "Log snapshot from self.modules"
