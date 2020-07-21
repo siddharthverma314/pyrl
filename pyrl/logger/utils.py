@@ -29,7 +29,7 @@ class Container(dict, Loggable):
         dict.__init__(self, *args, **kwargs)
         Loggable.__init__(self)
 
-    def log_collect(self, fn, local_fn):
+    def log_collect(self):
         return {k: v for k, v in self.items() if isinstance(v, Loggable)}
 
     def log_local_hyperparams(self) -> Dict[str, object]:
