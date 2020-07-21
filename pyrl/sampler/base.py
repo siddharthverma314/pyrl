@@ -10,11 +10,11 @@ from pyrl.logger import simpleloggable
 @simpleloggable
 class BaseSampler():
     def __init__(
-        self, action_from_obs: Callable, _path_length: int, _env: gym.Env,
+        self, action_from_obs: Callable, _path_length: int, env: gym.Env,
     ) -> None:
         self.policy = action_from_obs
         self.path_length = _path_length
-        self.env = _env
+        self.env = env
 
     @contextmanager
     def with_env(self, env: gym.Env):
