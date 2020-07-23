@@ -49,7 +49,7 @@ class GaussianActor(nn.Module):
     def log_prob(self, obs, act):
         dist = self.forward(obs)
         act = self.act_flat(act)
-        return dist.log_prob(act)
+        return dist.log_prob(act).sum(-1, keepdim=True)
 
     def action(self, obs, deterministic=False):
         # get dist
