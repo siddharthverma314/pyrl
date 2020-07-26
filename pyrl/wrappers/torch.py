@@ -26,5 +26,5 @@ class TorchWrapper(Wrapper):
 
     def render(self, mode):
         if mode == "rgb_array":
-            return torch.tensor(self.env.render("rgb_array"))
+            return torch.tensor(self.env.render("rgb_array").copy())
         return self.env.render(mode)
