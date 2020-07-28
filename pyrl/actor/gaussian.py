@@ -12,7 +12,7 @@ class SquashedNormal(pyd.TransformedDistribution):
         super().__init__(
             pyd.Normal(loc, scale),
             pyd.TanhTransform(
-                cache_size=1
+                cache_size=1,
             ),  # TODO: check performance of this vs cache_size=0
         )
         self.loc = loc
@@ -24,6 +24,9 @@ class SquashedNormal(pyd.TransformedDistribution):
         for tr in self.transforms:
             mu = tr(mu)
         return mu
+
+    def log_prob(self, tensor):
+        return super().log_prob(tensor.clamp(-0.999, 0.999))  # needed to prevent nans
 
 
 @simpleloggable
