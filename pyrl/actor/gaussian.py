@@ -26,7 +26,10 @@ class SquashedNormal(pyd.TransformedDistribution):
         return mu
 
     def log_prob(self, tensor):
-        return super().log_prob(tensor.clamp(-0.999, 0.999))  # needed to prevent nans
+        # hack to prevent nans
+        mask = (tensor > 0.999).float() + (tensor < -0.999).float()
+        mask = 1. - 0.001 * mask
+        return super().log_prob(mask * tensor)
 
 
 @simpleloggable
