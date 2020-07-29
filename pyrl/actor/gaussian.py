@@ -2,8 +2,7 @@ from typing import List, Tuple, Union
 import torch
 from torch import nn, distributions as pyd
 from gym import Space
-from pyrl.utils import MLP, Flatten, Unflatten, flatdim
-
+from pyrl.utils import MLP, Flatten, Unflatten
 from pyrl.logger import simpleloggable
 
 

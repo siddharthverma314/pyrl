@@ -37,3 +37,18 @@ class Container(dict, Loggable):
 
     def log_local_epoch(self) -> Dict[str, object]:
         return {}
+
+
+class Hyperparams(dict, Loggable):
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        Loggable.__init__(self)
+
+    def log_collect(self):
+        return {}
+
+    def log_local_hyperparams(self) -> Dict[str, object]:
+        return self
+
+    def log_local_epoch(self) -> Dict[str, object]:
+        return {}
