@@ -24,12 +24,6 @@ class SquashedNormal(pyd.TransformedDistribution):
             mu = tr(mu)
         return mu
 
-    def log_prob(self, tensor):
-        # hack to prevent nans
-        mask = (tensor > 0.999).float() + (tensor < -0.999).float()
-        mask = 1. - 0.001 * mask
-        return super().log_prob(mask * tensor)
-
 
 @simpleloggable
 class GaussianActor(nn.Module):
@@ -52,18 +46,22 @@ class GaussianActor(nn.Module):
         self.dist = SquashedNormal if _use_squashed_normal else pyd.Normal
 
     def log_prob(self, obs, act):
-        dist = self.forward(obs)
+        dist = self.forward(self.obs_flat(obs))
         act = self.act_flat(act)
         return dist.log_prob(act).sum(-1, keepdim=True)
 
     def action(self, obs, deterministic=False):
+        return self.action_with_log_prob(obs, deterministic)[0]
+
+    def action_with_log_prob(self, obs, deterministic=False):
         # get dist
         dist = self.forward(obs)
         if deterministic:
             action = dist.mean
         else:
             action = dist.rsample()
-        return self.act_unflat(action)
+        log_prob = dist.log_prob(action).sum(-1, keepdim=True)
+        return self.act_unflat(action), log_prob
 
     def forward(self, obs) -> pyd.Distribution:
         # flatten
