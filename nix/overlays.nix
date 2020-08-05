@@ -52,6 +52,8 @@
         cudaSupport = true;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
+
+      cpprb = python-self.callPackage ./cpprb.nix {};
     };
 
     python38 =
