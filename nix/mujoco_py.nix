@@ -34,13 +34,13 @@ buildPythonPackage {
   python = python3;
   MUJOCO_BUILD_GPU = cudaSupport;
   nativeBuildInputs = [
-    # python dependencies
+    autoPatchelfHook
+  ];
+  propagatedBuildInputs = [
     imageio
     numpy
     cython
     (callPackage ./glfw.nix {})
-
-    autoPatchelfHook
   ];
   buildInputs = [
     mesa
@@ -59,5 +59,6 @@ buildPythonPackage {
     patchelf --add-needed libEGL.so $out/lib/${python3.libPrefix}/site-packages/mujoco_py/cymj.cpython*.so
     patchelf --add-needed libOpenGL.so $out/lib/${python3.libPrefix}/site-packages/mujoco_py/cymj.cpython*.so
   '';
+
   doCheck = false;
 }

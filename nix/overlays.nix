@@ -55,6 +55,8 @@
       });
 
       glfw = python-self.callPackage ./glfw.nix {};
+
+      flatten-dict = python-self.callPackage ./flatten-dict.nix {};
     };
 
     python38 =
