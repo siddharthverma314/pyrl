@@ -11,10 +11,13 @@
 , xorg
 , lib
 , libglvnd
+, imageio
+, numpy
+, cython
+, buildPythonPackage
 }:
 let
   mujoco = callPackage ./mujoco.nix {};
-  mach-nix = callPackage ./mach-nix.nix {};
   src = fetchFromGitHub {
     owner = "siddharthverma314";
     repo = "mujoco-py";
@@ -22,7 +25,7 @@ let
     sha256 = "18z19qmmxd83knhfw9df4pjkp0pzjlpbmazx0w82g2ni618vcgry";
   };
 in
-mach-nix.buildPythonPackage {
+buildPythonPackage {
   inherit src;
   pname = "mujoco-py";
   version = "1.50.1.1";
@@ -30,7 +33,15 @@ mach-nix.buildPythonPackage {
 
   python = python3;
   MUJOCO_BUILD_GPU = cudaSupport;
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = [
+    # python dependencies
+    imageio
+    numpy
+    cython
+    (callPackage ./glfw.nix {})
+
+    autoPatchelfHook
+  ];
   buildInputs = [
     mesa
     mesa.osmesa

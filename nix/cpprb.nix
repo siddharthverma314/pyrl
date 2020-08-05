@@ -3,6 +3,7 @@
 , fetchPypi
 , numpy
 , cython
+, gym
 }:
 buildPythonPackage rec {
   pname = "cpprb";
@@ -11,5 +12,5 @@ buildPythonPackage rec {
     inherit pname version;
     sha256 = "001164hd2abn9gkzgsc2gw4mb4rwd6vxbg5ymbg4pf99dm4vswba";
   };
-  propagatedBuildInputs = [ numpy cython ];
+  propagatedBuildInputs = [ numpy cython gym ];
 }

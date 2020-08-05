@@ -15,22 +15,11 @@
   (self: super: rec {
 
     pythonOverrides = python-self: python-super: {
-      numpy = python-super.numpy.override { blas = super.mkl; };
+      #numpy = python-super.numpy.override { blas = super.mkl; };
 
       pytorch = python-super.pytorch.override {
-        mklSupport = true;
         openMPISupport = true;
         cudaSupport = true;
-        buildNamedTensor = true;
-        cudaArchList = [
-          "5.0"
-          "5.2"
-          "6.0"
-          "6.1"
-          "7.0"
-          "7.5"
-          "7.5+PTX"
-        ];
       };
 
       opencv3 = python-super.opencv3.override {
@@ -43,17 +32,29 @@
         enableFfmpeg = true;
       };
 
-      mujoco-py = self.callPackage ./mujoco_py.nix {
+      mujoco-py = python-self.callPackage ./mujoco_py.nix {
+        mesa = super.mesa;
         cudaSupport = false;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
 
-      mujoco-py_gpu = self.callPackage ./mujoco_py.nix {
+      mujoco-py_gpu = python-self.callPackage ./mujoco_py.nix {
+        mesa = super.mesa;
         cudaSupport = true;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
 
       cpprb = python-self.callPackage ./cpprb.nix {};
+
+      gym = python-super.gym.overrideAttrs (old: {
+        postPatch = ''
+          substituteInPlace setup.py \
+            --replace "pyglet>=1.2.0,<=1.3.2" "pyglet" \
+            --replace "cloudpickle>=1.2.0,<1.4.0" "cloudpickle" \
+        '';
+      });
+
+      glfw = python-self.callPackage ./glfw.nix {};
     };
 
     python38 =

@@ -5,7 +5,8 @@ with pkgs;
 mkShell {
   buildInputs = [
     (python38.withPackages (ps: with ps; [
-      cpprb
+      mujoco-py_gpu
+      gym
     ]))
   ];
 }
