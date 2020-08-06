@@ -6,12 +6,13 @@
 , termcolor
 , pygments
 , tabulate
+, gitignore
 }:
 buildPythonPackage rec {
   pname = "pyrl";
   version = "0.1.0";
 
-  src = builtins.path { name = pname; path = ./.; };
+  src = gitignore ./.;
 
   propagatedBuildInputs = [
     pytorch

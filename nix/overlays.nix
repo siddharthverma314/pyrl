@@ -9,6 +9,9 @@
       nvenc = true; # nvidia support
     };
 
+    # other utilities
+    gitignore = self.callPackage ./gitignore.nix {};
+
   })
 
   # python pkgs overlays
