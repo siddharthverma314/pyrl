@@ -57,9 +57,10 @@
         '';
       });
 
+      # self-made packages
       glfw = python-self.callPackage ./glfw.nix {};
-
       flatten-dict = python-self.callPackage ./flatten-dict.nix {};
+      scikit-video = python-self.callPackage ./scikit-video.nix {};
     };
 
     python38 =

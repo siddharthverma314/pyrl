@@ -5,7 +5,7 @@ with pkgs;
 mkShell {
   buildInputs = [
     (python38.withPackages (ps: with ps; [
-      flatten-dict
+      scikit-video
     ]))
   ];
 }
