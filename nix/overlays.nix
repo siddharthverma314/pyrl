@@ -15,7 +15,8 @@
   (self: super: rec {
 
     pythonOverrides = python-self: python-super: {
-      #numpy = python-super.numpy.override { blas = super.mkl; };
+      blas = super.blas.override { blasProvider = self.mkl; };
+      lapack = super.lapack.override { lapackProvider = self.mkl; };
 
       pytorch = python-super.pytorch.override {
         openMPISupport = true;
@@ -32,7 +33,7 @@
         enableFfmpeg = true;
       };
 
-      mujoco-py = python-self.callPackage ./mujoco_py.nix {
+      mujoco-py_cpu = python-self.callPackage ./mujoco_py.nix {
         mesa = super.mesa;
         cudaSupport = false;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
@@ -43,6 +44,8 @@
         cudaSupport = true;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
+
+      mujoco-py = python-self.mujoco-py_gpu;
 
       cpprb = python-self.callPackage ./cpprb.nix {};
 

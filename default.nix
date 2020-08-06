@@ -1,20 +1,27 @@
-let
-  pkgs = import ./nix/nixpkgs.nix;
-in
-pkgs.python3Packages.buildPythonPackage {
+{ buildPythonPackage
+, pytorch
+, gym
+, cpprb
+, flatten-dict
+, termcolor
+, pygments
+, tabulate
+}:
+buildPythonPackage rec {
   pname = "pyrl";
   version = "0.1.0";
 
-  src = ./.;
+  src = builtins.path { name = pname; path = ./.; };
 
-  propagatedBuildInputs = (with pkgs.python3Packages; [
+  propagatedBuildInputs = [
     pytorch
     gym
-    transformers
     cpprb
     flatten-dict
     termcolor
     pygments
     tabulate
-  ]);
+  ];
+
+  doCheck = false;
 }
