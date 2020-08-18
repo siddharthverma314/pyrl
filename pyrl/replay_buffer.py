@@ -17,9 +17,9 @@ class ReplayBuffer:
         _device: str,
     ):
         self.obs_flat = Flatten(obs_spec)
-        self.obs_unflat = Unflatten(obs_spec, False)
+        self.obs_unflat = Unflatten(obs_spec)
         self.act_flat = Flatten(act_spec)
-        self.act_unflat = Unflatten(act_spec, False)
+        self.act_unflat = Unflatten(act_spec)
 
         spec = {
             "obs": {"dtype": np.float32, "shape": self.obs_flat.dim},

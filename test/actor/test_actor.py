@@ -13,7 +13,7 @@ def test_integration():
     act_spec = Box(low=np.zeros(3, dtype=np.float32), high=np.ones(3, dtype=np.float32))
     actor = GaussianActor(obs_spec, act_spec, [60, 50])
     obs = torch.rand((100, 10))
-    actions = actor.forward(obs).sample()
+    actions = actor.action(obs)
     assert actions.shape == (100, 3)
 
 
@@ -24,7 +24,7 @@ def test_random_space():
         print(obs_spec)
         print(act_spec)
         actor = GaussianActor(obs_spec, act_spec, [60, 50])
-        actor.forward(torchify(obs_spec.sample())).sample()
+        actor.action(torchify(obs_spec.sample()))
 
 
 def test_log():
@@ -34,6 +34,6 @@ def test_log():
     act_spec = Box(low=np.zeros(3, dtype=np.float32), high=np.ones(3, dtype=np.float32))
     actor = GaussianActor(obs_spec, act_spec, [60, 50])
     obs = torch.rand((100, 10))
-    actor.forward(obs).sample()
+    actor.action(obs)
     print(flatten(actor.log_hyperparams()).keys())
     print(flatten(actor.log_epoch()).keys())

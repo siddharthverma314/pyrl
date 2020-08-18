@@ -8,7 +8,7 @@ from gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 
 
 def create_random_space():
-    "Create a random space that might be nested. Mostly for testing purposes."
+    "Create a random space that might be nested. Mostly for testing."
 
     choice = np.random.randint(4)
     if choice == 0:
@@ -23,7 +23,8 @@ def create_random_space():
         return Discrete(np.random.randint(5) + 2)
     elif choice == 3:
         return MultiDiscrete(
-            [np.random.randint(5) + 2 for _ in range(np.random.randint(10) + 1)]
+            [np.random.randint(
+                5) + 2 for _ in range(np.random.randint(10) + 1)]
         )
     else:
         raise NotImplementedError()
@@ -50,24 +51,43 @@ def flatdim(space: gym.Space) -> int:
         raise NotImplementedError
 
 
+def get_affine_transformation(space: gym.spaces.Box, device) -> tuple:
+    if all(space.bounded_below) and all(space.bounded_above):
+        m = (space.high - space.low) / 2
+        b = (space.high + space.low) / 2
+    else:
+        m, b = 1, 0
+    return tuple([torch.tensor(x).to(device) for x in (m, b)])
+
+
 class Flatten(torch.nn.Module):
-    def __init__(self, space):
+    def __init__(self, space, tanh=False):
         super().__init__()
         self.space = space
+        self.tanh = tanh
 
-    @staticmethod
-    def flatten(space, x):
+    def flatten(self, space, x):
         if isinstance(space, Box):
+            if not self.tanh:
+                return x.float()
+            m, b = get_affine_transformation(space, x.device)
+            x = (x - b) / m
+
+            # hack to prevent computing atanh(1.)
+            mask = (x > 0.999) + (x < 0.999)
+            mask = 0.999 * mask.float()
+            x = (x * mask).atanh()
+
             return x.float()
         elif isinstance(space, Discrete):
             return F.one_hot(x.long()[0], space.n).float()
         elif isinstance(space, Tuple):
             return torch.cat(
-                [Flatten.flatten(s, xp) for xp, s in zip(x, space.spaces)], dim=1
+                [self.flatten(s, xp) for xp, s in zip(x, space.spaces)], dim=1
             )
         elif isinstance(space, Dict):
             return torch.cat(
-                [Flatten.flatten(s, x[k]) for k, s in space.spaces.items()], dim=1
+                [self.flatten(s, x[k]) for k, s in space.spaces.items()], dim=1
             )
         elif isinstance(space, MultiBinary):
             return x.float()
@@ -91,21 +111,26 @@ class Flatten(torch.nn.Module):
 
 
 class Unflatten(torch.nn.Module):
-    def __init__(self, space, is_logits=True):
+    def __init__(self, space, is_logits=False, tanh=False):
         super().__init__()
         self.space = space
         self.is_logits = is_logits
+        self.tanh = tanh
 
     def unflatten(self, space, x):
         if isinstance(space, Box):
-            return x
+            if not self.tanh:
+                return x.float()
+            m, b = get_affine_transformation(space, x.device)
+            return m * x.tanh() + b
         elif isinstance(space, Discrete):
             if self.is_logits:
                 return pyd.Categorical(logits=x).sample((1,))
             else:
                 return pyd.Categorical(probs=x).sample((1,))
         elif isinstance(space, Tuple):
-            list_flattened = torch.split(x, list(map(flatdim, space.spaces)), dim=-1)
+            list_flattened = torch.split(
+                x, list(map(flatdim, space.spaces)), dim=-1)
             list_unflattened = [
                 self.unflatten(s, flattened)
                 for flattened, s in zip(list_flattened, space.spaces)

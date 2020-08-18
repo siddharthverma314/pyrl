@@ -6,13 +6,13 @@
 , termcolor
 , pygments
 , tabulate
-, gitignore
+, nix-gitignore
 }:
 buildPythonPackage rec {
   pname = "pyrl";
   version = "0.1.0";
 
-  src = gitignore ./.;
+  src = nix-gitignore.gitignoreSource [] ./.;
 
   propagatedBuildInputs = [
     pytorch

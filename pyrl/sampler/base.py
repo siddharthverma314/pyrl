@@ -8,7 +8,7 @@ from pyrl.logger import simpleloggable
 
 
 @simpleloggable
-class BaseSampler():
+class BaseSampler:
     def __init__(
         self, action_from_obs: Callable, _path_length: int, env: gym.Env,
     ) -> None:
@@ -24,8 +24,7 @@ class BaseSampler():
         self.env = prev_env
 
     def sample(
-        self,
-        start_obs: Union[None, torch.Tensor] = None,
+        self, start_obs: Union[None, torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, dict, torch.Tensor]:
         data = []
         obs = start_obs if start_obs else self.env.reset()
