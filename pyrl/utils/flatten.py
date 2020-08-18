@@ -23,8 +23,7 @@ def create_random_space():
         return Discrete(np.random.randint(5) + 2)
     elif choice == 3:
         return MultiDiscrete(
-            [np.random.randint(
-                5) + 2 for _ in range(np.random.randint(10) + 1)]
+            [np.random.randint(5) + 2 for _ in range(np.random.randint(10) + 1)]
         )
     else:
         raise NotImplementedError()
@@ -80,7 +79,7 @@ class Flatten(torch.nn.Module):
 
             return x.float()
         elif isinstance(space, Discrete):
-            return F.one_hot(x.long()[0], space.n).float()
+            return F.one_hot(x.squeeze(-1).long(), space.n).float()
         elif isinstance(space, Tuple):
             return torch.cat(
                 [self.flatten(s, xp) for xp, s in zip(x, space.spaces)], dim=1
@@ -125,12 +124,11 @@ class Unflatten(torch.nn.Module):
             return m * x.tanh() + b
         elif isinstance(space, Discrete):
             if self.is_logits:
-                return pyd.Categorical(logits=x).sample((1,))
+                return pyd.Categorical(logits=x).sample().unsqueeze(-1)
             else:
-                return pyd.Categorical(probs=x).sample((1,))
+                return pyd.Categorical(probs=x).sample().unsqueeze(-1)
         elif isinstance(space, Tuple):
-            list_flattened = torch.split(
-                x, list(map(flatdim, space.spaces)), dim=-1)
+            list_flattened = torch.split(x, list(map(flatdim, space.spaces)), dim=-1)
             list_unflattened = [
                 self.unflatten(s, flattened)
                 for flattened, s in zip(list_flattened, space.spaces)
@@ -151,9 +149,9 @@ class Unflatten(torch.nn.Module):
             outputs = []
             for t in torch.split(x, space.nvec.tolist(), dim=1):
                 if self.is_logits:
-                    outputs.append(pyd.Categorical(logits=t).sample((1,)))
+                    outputs.append(pyd.Categorical(logits=t).sample().unsqueeze(-1))
                 else:
-                    outputs.append(pyd.Categorical(probs=t).sample((1,)))
+                    outputs.append(pyd.Categorical(probs=t).sample().unsqueeze(-1))
             return torch.cat(outputs, dim=1)
         else:
             raise NotImplementedError
