@@ -1,1 +1,1 @@
-from .gaussian import GaussianActor
+from .gaussian import GaussianActor, TanhGaussianActor
