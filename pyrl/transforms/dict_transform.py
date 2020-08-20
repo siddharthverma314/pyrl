@@ -14,7 +14,7 @@ def flatdim(space: gym.Space) -> int:
     if isinstance(space, Box):
         return int(np.prod(space.shape))
     elif isinstance(space, Discrete):
-        return 1  # no automatic one-hot encoding
+        return 1
     elif isinstance(space, Tuple):
         return int(sum([flatdim(s) for s in space.spaces]))
     elif isinstance(space, Dict):

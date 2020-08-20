@@ -60,6 +60,8 @@ class GaussianActor(BaseActor):
 
 
 class TanhGaussianActor(GaussianActor):
+    "Works well with MuJoCo environments"
+
     def log_prob(self, obs, act):
         # hack to prevent computing atanh(1.)
         act = self.act_flat(act)
