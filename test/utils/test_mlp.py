@@ -1,6 +1,7 @@
 from pyrl.utils import MLP
 import torch
 from torch.functional import F
+from pyrl.utils import create_random_space, torchify, untorchify
 
 
 def test_simple_network():
@@ -36,3 +37,11 @@ def test_fake_task():
         opt.step()
 
     assert F.mse_loss(mlp.state_dict()["mlp.0.weight"].T.cpu(), A).item() < 1e-2
+
+
+def test_gym_spaces():
+    for _ in range(100):
+        inp_space = create_random_space()
+        out_space = create_random_space()
+        mlp = MLP(inp_space, [256, 256], out_space)
+        mlp.forward(torchify(inp_space.sample()))

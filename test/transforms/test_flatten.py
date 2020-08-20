@@ -1,6 +1,6 @@
-from pyrl.utils import Flatten, Unflatten, torchify, create_random_space
+from pyrl.transforms import Flatten, Unflatten
 from torch.nn import Sequential
-from pyrl.utils import collate
+from pyrl.utils import collate, create_random_space, torchify
 import torch
 from torch.functional import F
 import gym

@@ -2,7 +2,8 @@ from typing import List
 import torch
 from torch import nn
 from gym import Space
-from pyrl.utils import MLP, Flatten
+from pyrl.utils import MLP
+from pyrl.transforms import Flatten
 from pyrl.logger import simpleloggable
 
 

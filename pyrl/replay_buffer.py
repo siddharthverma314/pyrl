@@ -3,7 +3,8 @@ import torch
 import numpy as np
 from gym import Space
 from pyrl.logger import simpleloggable
-from pyrl.utils import untorchify, torchify, Flatten, Unflatten
+from pyrl.utils import untorchify, torchify
+from pyrl.transforms import Flatten, Unflatten
 
 
 @simpleloggable

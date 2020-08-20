@@ -1,7 +1,8 @@
 from typing import List, Tuple
 from torch import nn, distributions as pyd
 from gym import Space
-from pyrl.utils import MLP, Flatten, Unflatten
+from pyrl.utils import MLP
+from pyrl.transforms import Flatten, Unflatten
 from pyrl.logger import simpleloggable
 
 
@@ -13,12 +14,13 @@ class GaussianActor(nn.Module):
         act_spec: Space,
         hidden_dim: List[int],
         _log_std_bounds: Tuple[float, float] = (-5, 2),
+        _tanh: bool = True,
     ) -> None:
         nn.Module.__init__(self)
 
         self.obs_flat = Flatten(obs_spec)
-        self.act_flat = Flatten(act_spec, tanh=True)
-        self.act_unflat = Unflatten(act_spec, tanh=True, is_logits=True) # TODO: Check this
+        self.act_flat = Flatten(act_spec, tanh=_tanh)
+        self.act_unflat = Unflatten(act_spec, tanh=_tanh, is_logits=True) # TODO: Check this
 
         self.log_std_bounds = _log_std_bounds
         self.policy = MLP(self.obs_flat.dim, hidden_dim, self.act_flat.dim * 2)
