@@ -1,1 +1,1 @@
-from .flatten import flatdim, Flatten, Unflatten
+from .dict_transform import flatdim, Flatten, Unflatten
