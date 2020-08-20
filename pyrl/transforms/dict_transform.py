@@ -22,7 +22,7 @@ def flatdim(space: gym.Space) -> int:
     elif isinstance(space, MultiBinary):
         return int(space.n)
     elif isinstance(space, MultiDiscrete):
-        return int(np.sum(space.nvec))
+        return len(space.nvec)
     else:
         raise NotImplementedError
 
@@ -53,6 +53,7 @@ class Unflatten(torch.nn.Module):
     def __init__(self, space):
         super().__init__()
         self.space = space
+        self.dim = flatdim(self.space)
 
     def unflatten(self, space, x):
         if isinstance(space, Tuple):
@@ -73,10 +74,6 @@ class Unflatten(torch.nn.Module):
             return OrderedDict(list_unflattened)
         else:
             return x
-
-    @property
-    def dim(self) -> int:
-        return flatdim(self.space)
 
     def forward(self, x):
         return self.unflatten(self.space, x)

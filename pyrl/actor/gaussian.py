@@ -2,52 +2,50 @@ from typing import List, Tuple
 from torch import nn, distributions as pyd
 from gym import Space
 from pyrl.utils import MLP
-from pyrl.transforms import Flatten, Unflatten
+from pyrl.transforms import Flatten, Unflatten, TanhScaleTransform
 from pyrl.logger import simpleloggable
+from .base import BaseActor
 
 
 @simpleloggable
-class GaussianActor(nn.Module):
+class GaussianActor(BaseActor):
     def __init__(
         self,
         obs_spec: Space,
         act_spec: Space,
         hidden_dim: List[int],
         _log_std_bounds: Tuple[float, float] = (-5, 2),
-        _tanh: bool = True,
     ) -> None:
+        BaseActor.__init__(self)
         nn.Module.__init__(self)
 
         self.obs_flat = Flatten(obs_spec)
-        self.act_flat = Flatten(act_spec, tanh=_tanh)
-        self.act_unflat = Unflatten(act_spec, tanh=_tanh, is_logits=True) # TODO: Check this
+        self.act_flat = Flatten(act_spec)
+        self.act_unflat = Unflatten(act_spec)
 
         self.log_std_bounds = _log_std_bounds
         self.policy = MLP(self.obs_flat.dim, hidden_dim, self.act_flat.dim * 2)
 
-    def _get_dist(self, obs_flat):
+    def _get_dist(self, obs):
         # get mu and log_std
-        mu, log_std = self.policy(obs_flat).chunk(2, dim=-1)
+        mu, log_std = self.policy(self.obs_flat(obs)).chunk(2, dim=-1)
         self.log("mu", mu)
+        self.log("log_std_before", log_std)
 
         # constrain log_std inside [log_std_min, log_std_max]
-        log_std = log_std.tanh()
-        ls_min, ls_max = self.log_std_bounds
-        log_std = ls_min + (ls_max - ls_min) * (log_std + 1) / 2
-        dist = pyd.Normal(mu, log_std.exp())
-        self.log("log_std", log_std)
+        log_std = TanhScaleTransform(*self.log_std_bounds)(log_std)
+        self.log("log_std_after", log_std)
 
+        # make normal distribution
+        dist = pyd.Normal(mu, log_std.exp())
         return dist
 
     def log_prob(self, obs, act):
-        dist = self._get_dist(self.obs_flat(obs))
+        dist = self._get_dist(obs)
         return dist.log_prob(self.act_flat(act)).sum(-1, keepdim=True)
 
-    def action(self, obs, deterministic=False):
-        return self.action_with_log_prob(obs, deterministic)[0]
-
     def action_with_log_prob(self, obs, deterministic=False):
-        dist = self._get_dist(self.obs_flat(obs))
+        dist = self._get_dist(obs)
 
         if deterministic:
             action = dist.mean
@@ -55,7 +53,24 @@ class GaussianActor(nn.Module):
             action = dist.rsample()
         log_prob = dist.log_prob(action).sum(-1, keepdim=True)
 
+        self.log("action", action)
+        self.log("log_prob", log_prob)
+
         return self.act_unflat(action), log_prob
 
-    def forward(self, obs) -> pyd.Distribution:
-        return self.action(obs, deterministic=False)
+
+class TanhGaussianActor(GaussianActor):
+    def log_prob(self, obs, act):
+        # hack to prevent computing atanh(1.)
+        act = self.act_flat(act)
+        mask = (act > 0.999) + (act < 0.999)
+        mask = 0.999 * mask.float()
+        act = self.act_unflat((act * mask).atanh())
+
+        return super().log_prob(obs, act)
+
+    def action_with_log_prob(self, obs, deterministic=False):
+        act, log_prob = super().action_with_log_prob(obs, deterministic)
+        act = self.act_flat(act).tanh()
+        self.log("action_tanh", act)
+        return self.act_unflat(act), log_prob

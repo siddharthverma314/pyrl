@@ -52,27 +52,3 @@ def test_multi_space():
         forward = m.forward(sample)
         print("FORWARD:", forward)
         custom_equals(forward, sample)
-
-
-def test_nan():
-    low = np.array([-1, -2, -3, -2, -1], dtype=np.float32)
-    high = np.array([1, 2, 3, 2, 1], dtype=np.float32)
-    space = gym.spaces.Box(low=low, high=high)
-
-    flatten = Flatten(space, tanh=True)
-    unflatten = Unflatten(space, tanh=True)
-
-    for _ in range(1000):
-        print("=" * 50)
-
-        orig_sample = torchify(space.sample())
-        sample = orig_sample
-        print("orig", sample)
-
-        sample = flatten(sample)
-        print("flatten", sample)
-        assert not torch.any(sample.isnan())
-
-        sample = unflatten(sample)
-        print("unflatten", sample)
-        assert F.mse_loss(sample, orig_sample) < 1e-2
