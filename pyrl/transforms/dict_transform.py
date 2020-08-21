@@ -30,23 +30,34 @@ def flatdim(space: gym.Space) -> int:
 class Flatten(Module):
     def __init__(self, space):
         super().__init__()
-        self.space = space
+        self.before_space = space
+        self.after_space = Tuple(self.flatten_space(space))
         self.dim = flatdim(space)
 
-    def flatten(self, space, x):
+    @staticmethod
+    def flatten_space(space):
+        if isinstance(space, Tuple):
+            return sum([Flatten.flatten_space(s) for s in space.spaces], [])
+        elif isinstance(space, Dict):
+            return sum([Flatten.flatten_space(s) for s in space.spaces.values()], [])
+        else:
+            return [space]
+
+    @staticmethod
+    def flatten(space, x):
         if isinstance(space, Tuple):
             return torch.cat(
-                [self.flatten(s, xp) for xp, s in zip(x, space.spaces)], dim=1
+                [Flatten.flatten(s, xp) for xp, s in zip(x, space.spaces)], dim=1
             )
         elif isinstance(space, Dict):
             return torch.cat(
-                [self.flatten(s, x[k]) for k, s in space.spaces.items()], dim=1
+                [Flatten.flatten(s, x[k]) for k, s in space.spaces.items()], dim=1
             )
         else:
             return x
 
     def forward(self, x):
-        return self.flatten(self.space, x)
+        return self.flatten(self.before_space, x)
 
 
 class Unflatten(torch.nn.Module):
@@ -55,11 +66,12 @@ class Unflatten(torch.nn.Module):
         self.space = space
         self.dim = flatdim(self.space)
 
-    def unflatten(self, space, x):
+    @staticmethod
+    def unflatten(space, x):
         if isinstance(space, Tuple):
             list_flattened = torch.split(x, list(map(flatdim, space.spaces)), dim=-1)
             list_unflattened = [
-                self.unflatten(s, flattened)
+                Unflatten.unflatten(s, flattened)
                 for flattened, s in zip(list_flattened, space.spaces)
             ]
             return tuple(list_unflattened)
@@ -68,7 +80,7 @@ class Unflatten(torch.nn.Module):
                 x, list(map(flatdim, space.spaces.values())), dim=-1
             )
             list_unflattened = [
-                (key, self.unflatten(s, flattened))
+                (key, Unflatten.unflatten(s, flattened))
                 for flattened, (key, s) in zip(list_flattened, space.spaces.items())
             ]
             return OrderedDict(list_unflattened)
