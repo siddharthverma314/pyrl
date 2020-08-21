@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from gym import Space
 from pyrl.utils import MLP
-from pyrl.transforms import Flatten
+from pyrl.transforms import OneHotFlatten
 from pyrl.logger import simpleloggable
 
 
@@ -14,7 +14,7 @@ class DoubleVCritic(nn.Module):
     def __init__(self, obs_spec: Space, hidden_dim: List[int]) -> None:
         nn.Module.__init__(self)
 
-        self.obs_flat = Flatten(obs_spec)
+        self.obs_flat = OneHotFlatten(obs_spec)
 
         self.vf_1 = MLP(self.obs_flat.dim, hidden_dim, 1)
         self.vf_2 = MLP(self.obs_flat.dim, hidden_dim, 1)

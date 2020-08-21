@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from gym import Space
 from pyrl.utils import MLP
-from pyrl.transforms import Flatten
+from pyrl.transforms import OneHotFlatten
 from pyrl.logger import simpleloggable
 
 
@@ -16,8 +16,8 @@ class DoubleQCritic(nn.Module):
     ) -> None:
         nn.Module.__init__(self)
 
-        self.obs_flat = Flatten(obs_spec)
-        self.act_flat = Flatten(action_spec)
+        self.obs_flat = OneHotFlatten(obs_spec)
+        self.act_flat = OneHotFlatten(action_spec)
 
         self.qf_1 = MLP(self.obs_flat.dim + self.act_flat.dim, hidden_dim, 1)
         self.qf_2 = MLP(self.obs_flat.dim + self.act_flat.dim, hidden_dim, 1)
