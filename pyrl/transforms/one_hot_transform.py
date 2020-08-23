@@ -63,14 +63,16 @@ class OneHot(Module):
 
     @staticmethod
     def one_hot(space, x):
-        if isinstance(space, Tuple):
-            return tuple([OneHot.one_hot(s, xp) for s, xp in zip(space.spaces, x)])
+        if isinstance(space, list) or isinstance(space, tuple):
+            return tuple([OneHot.one_hot(s, xp) for s, xp in zip(space, x)])
+        elif isinstance(space, Tuple):
+            return OneHot.one_hot(space.spaces, x)
         elif isinstance(space, Dict):
             return {k: OneHot.one_hot(s, x[k]) for k, s in space.spaces.items()}
         elif isinstance(space, MultiDiscrete):
             return torch.cat(
                 OneHot.one_hot(
-                    Tuple([Discrete(d) for d in space.nvec]), x.split(1, dim=1)
+                    [Discrete(d) for d in space.nvec], x.split(1, dim=1)
                 ),
                 dim=1,
             )
@@ -89,15 +91,18 @@ class UnOneHot(Module):
         self.after_space = space
         self.dim = unonehotdim(self.after_space)
 
-    def un_one_hot(self, space, x):
-        if isinstance(space, Tuple):
-            return tuple([self.un_one_hot(s, xp) for s, xp in zip(space.spaces, x)])
+    @staticmethod
+    def un_one_hot(space, x):
+        if isinstance(space, tuple) or isinstance(space, list):
+            return tuple([UnOneHot.un_one_hot(s, xp) for s, xp in zip(space, x)])
+        elif isinstance(space, Tuple):
+            return UnOneHot.un_one_hot(space.spaces, x)
         elif isinstance(space, Dict):
-            return {k: self.un_one_hot(s, x[k]) for k, s in space.spaces.items()}
+            return {k: UnOneHot.un_one_hot(s, x[k]) for k, s in space.spaces.items()}
         elif isinstance(space, MultiDiscrete):
             return torch.cat(
-                self.un_one_hot(
-                    Tuple([Discrete(d) for d in space.nvec]),
+                UnOneHot.un_one_hot(
+                    [Discrete(d) for d in space.nvec],
                     x.split(tuple(space.nvec), dim=1),
                 ),
                 dim=1,
