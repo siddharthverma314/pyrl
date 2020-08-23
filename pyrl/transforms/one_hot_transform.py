@@ -71,9 +71,7 @@ class OneHot(Module):
             return {k: OneHot.one_hot(s, x[k]) for k, s in space.spaces.items()}
         elif isinstance(space, MultiDiscrete):
             return torch.cat(
-                OneHot.one_hot(
-                    [Discrete(d) for d in space.nvec], x.split(1, dim=1)
-                ),
+                OneHot.one_hot([Discrete(d) for d in space.nvec], x.split(1, dim=1)),
                 dim=1,
             )
         elif isinstance(space, Discrete):

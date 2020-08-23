@@ -36,6 +36,7 @@ def make_test_multi_space(model, size=20):
             forward = m.forward(sample)
             print("FORWARD:", forward)
             custom_equals(forward, sample)
+
     return test_multi_space
 
 
