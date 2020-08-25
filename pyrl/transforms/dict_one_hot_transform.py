@@ -10,6 +10,9 @@ class OneHotFlatten(Module):
         self.flatten = Flatten(self.one_hot.after_space)
         self.dim = self.flatten.dim
 
+        self.before_space = space
+        self.after_space = self.flatten.after_space
+
     def forward(self, x):
         return self.flatten(self.one_hot(x))
 
