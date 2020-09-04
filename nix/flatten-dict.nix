@@ -4,13 +4,23 @@
 , six
 , pathlib2
 , setuptools
+, sources
 }:
 buildPythonPackage rec {
   pname = "flatten-dict";
   version = "0.3.0";
-  src = fetchPypi {
-    inherit pname version;
-    sha256 = "0zix664j0n6fyk5infiif38k56knyra95lbs73pwb13wbkql7k0c";
-  };
+  src = sources.flatten-dict;
+  postPatch = ''
+    cat > setup.py << EOF
+    from setuptools import setup, find_packages
+
+    setup(
+      name='flatten-dict',
+      version='0.0.0',
+      author='Siddharth Verma',
+      packages=find_packages(),    
+    )
+    EOF
+  '';
   propagatedBuildInputs = [ six pathlib2 setuptools ];
 }

@@ -4,14 +4,12 @@
 , unzip
 , libGL
 , xorg
+, sources
 }:
 stdenv.mkDerivation {
   pname = "mujoco";
   version = "1.5";
-  src = fetchurl {
-    url = "https://www.roboti.us/download/mjpro150_linux.zip";
-    sha256 = "0xsxng45q27fr25m018jci0f3axv6h9y4zwxj62w4apbjrcyh9pv";
-  };
+  src = sources.mujoco;
   buildInputs = [
     autoPatchelfHook
     unzip

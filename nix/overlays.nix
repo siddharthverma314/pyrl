@@ -1,4 +1,9 @@
 [
+  # add sources
+  (self: super: {
+    sources = import ./sources.nix;
+  })
+
   # top-level pkgs overlays
   (self: super: {
     openmpi = super.openmpi.override { cudaSupport = true; };
@@ -8,10 +13,6 @@
       nonfreeLicensing = true;
       nvenc = true; # nvidia support
     };
-
-    # other utilities
-    gitignore = self.callPackage ./gitignore.nix {};
-
   })
 
   # python pkgs overlays
@@ -64,6 +65,7 @@
       glfw = python-self.callPackage ./glfw.nix {};
       flatten-dict = python-self.callPackage ./flatten-dict.nix {};
       scikit-video = python-self.callPackage ./scikit-video.nix {};
+      torchtext = python-self.callPackage ./torchtext.nix {};
     };
 
     python38 =

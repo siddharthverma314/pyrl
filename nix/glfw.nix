@@ -3,14 +3,12 @@
 , fetchPypi
 , glfw3
 , python3
+, sources
 }:
 buildPythonPackage rec {
   pname = "glfw";
   version = "1.12.0";
-  src = fetchPypi {
-    inherit pname version;
-    sha256 = "1ccgpq555p0ay6gp9lcbm3yp1d56yfcnjgch0cb4ypj78dxfv5gi";
-  };
+  src = sources.pyGLFW;
   preFixup = ''
     cat <<EOF > $out/lib/${python3.libPrefix}/site-packages/glfw/library.py
     import ctypes

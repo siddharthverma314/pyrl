@@ -15,15 +15,11 @@
 , numpy
 , cython
 , buildPythonPackage
+, sources
 }:
 let
   mujoco = callPackage ./mujoco.nix {};
-  src = fetchFromGitHub {
-    owner = "siddharthverma314";
-    repo = "mujoco-py";
-    rev = "84f0279f9a78cf1f36f47ac9f8871042b59846a";
-    sha256 = "18z19qmmxd83knhfw9df4pjkp0pzjlpbmazx0w82g2ni618vcgry";
-  };
+  src = sources.mujoco-py;
 in
 buildPythonPackage {
   inherit src;

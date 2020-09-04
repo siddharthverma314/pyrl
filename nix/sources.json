@@ -1,0 +1,62 @@
+{
+    "cpprb": {
+        "ref": "master",
+        "repo": "git@github.com:ymd-h/cpprb",
+        "rev": "0224c8ea989316390300dd12962472baab35f355",
+        "type": "git"
+    },
+    "flatten-dict": {
+        "ref": "master",
+        "repo": "git@github.com:ianlini/flatten-dict",
+        "rev": "f1a254435042709538a84a0aaa30aed784b266da",
+        "type": "git"
+    },
+    "mujoco": {
+        "sha256": "0xsxng45q27fr25m018jci0f3axv6h9y4zwxj62w4apbjrcyh9pv",
+        "type": "file",
+        "url": "https://www.roboti.us/download/mjpro150_linux.zip",
+        "url_template": "https://www.roboti.us/download/mjpro150_linux.zip"
+    },
+    "mujoco-py": {
+        "ref": "master",
+        "repo": "git@github.com:siddharthverma314/mujoco-py",
+        "rev": "84f0279f9a78cf1f36f47ac9f8871042b59846a4",
+        "type": "git"
+    },
+    "niv": {
+        "branch": "master",
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "fad2a6cbfb2e7cdebb7cb0ad2f5cc91e2c9bc06b",
+        "sha256": "0mghc1j0rd15spdjx81bayjqr0khc062cs25y5dcfzlxk4ynyc6m",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/fad2a6cbfb2e7cdebb7cb0ad2f5cc91e2c9bc06b.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "release-20.03",
+        "description": "Nix Packages collection",
+        "homepage": null,
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d92de0eb189392f1978ca0c2747cf21866242e36",
+        "sha256": "17y692dyq75ciarabk69j50vz13xklwivv4yirw9a5j8ivx61c5z",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/d92de0eb189392f1978ca0c2747cf21866242e36.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "pyGLFW": {
+        "ref": "master",
+        "repo": "git@github.com:FlorianRhiem/pyGLFW",
+        "rev": "7b2db95290b94569777f249dcc38340514799f8c",
+        "type": "git"
+    },
+    "scikit-video": {
+        "ref": "master",
+        "repo": "git@github.com:scikit-video/scikit-video.git",
+        "rev": "87c7113a84b50679d9853ba81ba34b557f516b05",
+        "type": "git"
+    }
+}
