@@ -17,7 +17,7 @@
 
   # python pkgs overlays
   (self: super: rec {
-    packageOverrides = python-self: python-super: rec {
+    pythonOverrides = python-self: python-super: rec {
       blas = super.blas.override { blasProvider = super.mkl; };
       lapack = super.lapack.override { lapackProvider = super.mkl; };
 
@@ -66,7 +66,7 @@
       scikit-video = python-super.callPackage ./scikit-video.nix {};
     };
 
-    python38 = super.python38.override { inherit packageOverrides; };
+    python38 = super.python38.override { packageOverrides = pythonOverrides; };
     python3 = python38;
   })
 ]
