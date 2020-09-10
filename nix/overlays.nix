@@ -17,10 +17,9 @@
 
   # python pkgs overlays
   (self: super: rec {
-
-    pythonOverrides = python-self: python-super: {
-      blas = super.blas.override { blasProvider = self.mkl; };
-      lapack = super.lapack.override { lapackProvider = self.mkl; };
+    packageOverrides = python-self: python-super: rec {
+      blas = super.blas.override { blasProvider = super.mkl; };
+      lapack = super.lapack.override { lapackProvider = super.mkl; };
 
       pytorch = python-super.pytorch.override {
         openMPISupport = true;
@@ -37,21 +36,21 @@
         enableFfmpeg = true;
       };
 
-      mujoco-py_cpu = python-self.callPackage ./mujoco_py.nix {
+      mujoco-py_cpu = python-super.callPackage ./mujoco_py.nix {
         mesa = super.mesa;
         cudaSupport = false;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
 
-      mujoco-py_gpu = python-self.callPackage ./mujoco_py.nix {
+      mujoco-py_gpu = python-super.callPackage ./mujoco_py.nix {
         mesa = super.mesa;
         cudaSupport = true;
         mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
       };
 
-      mujoco-py = python-self.mujoco-py_gpu;
+      mujoco-py = mujoco-py_gpu;
 
-      cpprb = python-self.callPackage ./cpprb.nix {};
+      cpprb = python-super.callPackage ./cpprb.nix {};
 
       gym = python-super.gym.overrideAttrs (old: {
         postPatch = ''
@@ -62,15 +61,12 @@
       });
 
       # self-made packages
-      glfw = python-self.callPackage ./glfw.nix {};
-      flatten-dict = python-self.callPackage ./flatten-dict.nix {};
-      scikit-video = python-self.callPackage ./scikit-video.nix {};
-      torchtext = python-self.callPackage ./torchtext.nix {};
+      glfw = python-super.callPackage ./glfw.nix {};
+      flatten-dict = python-super.callPackage ./flatten-dict.nix {};
+      scikit-video = python-super.callPackage ./scikit-video.nix {};
     };
 
-    python38 =
-      super.python38.override { packageOverrides = self.pythonOverrides; };
-
+    python38 = super.python38.override { inherit packageOverrides; };
     python3 = python38;
   })
 ]
