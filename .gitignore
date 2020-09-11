@@ -1,4 +1,4 @@
 secrets/
 __pycache__/
 *.egg-info/
-result
+result*
