@@ -39,13 +39,13 @@
       mujoco-py_cpu = python-super.callPackage ./mujoco_py.nix {
         mesa = super.mesa;
         cudaSupport = false;
-        mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
+        mjKeyPath = ~/secrets/mjkey.txt;
       };
 
       mujoco-py_gpu = python-super.callPackage ./mujoco_py.nix {
         mesa = super.mesa;
         cudaSupport = true;
-        mjKeyPath = /home/vsiddharth/secrets/mjkey.txt;
+        mjKeyPath = ~/secrets/mjkey.txt;
       };
 
       mujoco-py = mujoco-py_gpu;
