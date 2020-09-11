@@ -1,15 +1,27 @@
 {
     "cpprb": {
-        "ref": "master",
-        "repo": "git@github.com:ymd-h/cpprb",
+        "branch": "master",
+        "description": "Mirror repository of https://gitlab.com/ymd_h/cpprb",
+        "homepage": null,
+        "owner": "ymd-h",
+        "repo": "cpprb",
         "rev": "0224c8ea989316390300dd12962472baab35f355",
-        "type": "git"
+        "sha256": "0dz2df2ayrgp675n629gf1j4qcvzs40ciqiicn50ikdsh7xd0chf",
+        "type": "tarball",
+        "url": "https://github.com/ymd-h/cpprb/archive/0224c8ea989316390300dd12962472baab35f355.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "flatten-dict": {
-        "ref": "master",
-        "repo": "git@github.com:ianlini/flatten-dict",
+        "branch": "master",
+        "description": "A flexible utility for flattening and unflattening dict-like objects in Python.",
+        "homepage": "",
+        "owner": "ianlini",
+        "repo": "flatten-dict",
         "rev": "f1a254435042709538a84a0aaa30aed784b266da",
-        "type": "git"
+        "sha256": "1ppg0c253cb9cjxi1pp5v00biwnawl62wjlrjpqvyca08lbl6c8x",
+        "type": "tarball",
+        "url": "https://github.com/ianlini/flatten-dict/archive/f1a254435042709538a84a0aaa30aed784b266da.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "mujoco": {
         "sha256": "0xsxng45q27fr25m018jci0f3axv6h9y4zwxj62w4apbjrcyh9pv",
@@ -18,10 +30,16 @@
         "url_template": "https://www.roboti.us/download/mjpro150_linux.zip"
     },
     "mujoco-py": {
-        "ref": "master",
-        "repo": "git@github.com:siddharthverma314/mujoco-py",
+        "branch": "master",
+        "description": "MuJoCo is a physics engine for detailed, efficient rigid body simulations with contacts. mujoco-py allows using MuJoCo from Python 3.",
+        "homepage": "",
+        "owner": "siddharthverma314",
+        "repo": "mujoco-py",
         "rev": "84f0279f9a78cf1f36f47ac9f8871042b59846a4",
-        "type": "git"
+        "sha256": "18z19qmmxd83knhfw9df4pjkp0pzjlpbmazx0w82g2ni618vcgry",
+        "type": "tarball",
+        "url": "https://github.com/siddharthverma314/mujoco-py/archive/84f0279f9a78cf1f36f47ac9f8871042b59846a4.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
         "branch": "master",
@@ -29,34 +47,46 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "fad2a6cbfb2e7cdebb7cb0ad2f5cc91e2c9bc06b",
-        "sha256": "0mghc1j0rd15spdjx81bayjqr0khc062cs25y5dcfzlxk4ynyc6m",
+        "rev": "dd13098d01eaa6be68237e7e38f96782b0480755",
+        "sha256": "1cfjdbsn0219fjzam1k7nqzkz8fb1ypab50rhyj026qbklqq2kvq",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/fad2a6cbfb2e7cdebb7cb0ad2f5cc91e2c9bc06b.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/dd13098d01eaa6be68237e7e38f96782b0480755.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixpkgs-unstable",
+        "branch": "master",
         "description": "Nix Packages collection",
         "homepage": null,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7bc3a08d3a4c700b53a3b27f5acd149f24b931ec",
-        "sha256": "1kiz37052zsgvw7a378zg08mpbi1wk8dkgm5j6dy0x4mxvcg8ws3",
+        "rev": "6623aac94635324b54ad80327c5883896f4d519c",
+        "sha256": "0b2g899958w5q3bm8a07syhpd5sn4kz0ykfnkz7az4m2f18ykycb",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/7bc3a08d3a4c700b53a3b27f5acd149f24b931ec.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6623aac94635324b54ad80327c5883896f4d519c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pyGLFW": {
-        "ref": "master",
-        "repo": "git@github.com:FlorianRhiem/pyGLFW",
+        "branch": "master",
+        "description": "Python bindings for GLFW",
+        "homepage": null,
+        "owner": "FlorianRhiem",
+        "repo": "pyGLFW",
         "rev": "7b2db95290b94569777f249dcc38340514799f8c",
-        "type": "git"
+        "sha256": "1c32lmbn94vp6q0y5rli2m442ql673dql83x1cikxb8gmcyavqbd",
+        "type": "tarball",
+        "url": "https://github.com/FlorianRhiem/pyGLFW/archive/7b2db95290b94569777f249dcc38340514799f8c.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "scikit-video": {
-        "ref": "master",
-        "repo": "git@github.com:scikit-video/scikit-video.git",
+        "branch": "master",
+        "description": "Video Processing in Python",
+        "homepage": "http://www.scikit-video.org",
+        "owner": "scikit-video",
+        "repo": "scikit-video",
         "rev": "87c7113a84b50679d9853ba81ba34b557f516b05",
-        "type": "git"
+        "sha256": "1vaqkw7vag012qqbfmhbnpkb153mxa30qz74l5b490rzlw5lq13g",
+        "type": "tarball",
+        "url": "https://github.com/scikit-video/scikit-video/archive/87c7113a84b50679d9853ba81ba34b557f516b05.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
