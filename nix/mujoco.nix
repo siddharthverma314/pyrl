@@ -10,9 +10,12 @@ stdenv.mkDerivation {
   pname = "mujoco";
   version = "1.5";
   src = sources.mujoco;
+
+  unpackCmd = "unzip $curSrc";
+  nativeBuildInputs = [ unzip ];
+
   buildInputs = [
     autoPatchelfHook
-    unzip
     stdenv.cc.cc.lib
     libGL
     xorg.libX11
