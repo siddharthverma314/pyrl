@@ -9,4 +9,4 @@ nocachix:
 	nix build -f default.nix pkg dev --max-jobs $(JOBS)
 
 pushcachix:
-	nix-build default.nix | cachix push pyrl -j=$(JOBS)
+	nix-build default.nix | cachix push pyrl -j $(JOBS)
