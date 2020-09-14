@@ -2,7 +2,7 @@
 {
   pkg = pkgs.python3Packages.callPackage ./derivation.nix {};
   dev = pkgs.python3.withPackages (ps: with ps; [
-    python-language-server
+    pkgs.python-language-server
     pyls-black
     ipdb
     rope
