@@ -14,6 +14,7 @@ def collate(dicts: List[dict]) -> dict:
 def uncollate(d: dict) -> List[dict]:
     d = flatten(d)
     dicts = []
-    for i in range(len(next(d.values()))):
-        dicts = unflatten({k: v[i] for k, v in d.items()})
+    num_entries = len(next(iter(d.values())))
+    for i in range(num_entries):
+        dicts.append(unflatten({k: v[i] for k, v in d.items()}))
     return dicts
