@@ -15,7 +15,7 @@ in
         rope
         pyflakes
         pytest
-        tensorflow-tensorboard
+        tensorflow-tensorboard_2
       ]))
     ];
   };
