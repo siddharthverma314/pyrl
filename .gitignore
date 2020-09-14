@@ -2,3 +2,5 @@ secrets/
 __pycache__/
 *.egg-info/
 result*
+.direnv
+.envrc

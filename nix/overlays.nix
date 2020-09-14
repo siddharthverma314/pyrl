@@ -13,6 +13,8 @@
       nonfreeLicensing = true;
       nvenc = true; # nvidia support
     };
+
+    gitignore = (super.callPackage super.sources.gitignore {}).gitignoreSource;
   })
 
   # python pkgs overlays
