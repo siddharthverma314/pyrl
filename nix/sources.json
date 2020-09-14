@@ -54,15 +54,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "master",
+        "branch": "nixpkgs-unstable",
         "description": "Nix Packages collection",
         "homepage": null,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "6623aac94635324b54ad80327c5883896f4d519c",
-        "sha256": "0b2g899958w5q3bm8a07syhpd5sn4kz0ykfnkz7az4m2f18ykycb",
+        "rev": "893ad96c18169bdd698330f6d76bf1d871a7adcc",
+        "sha256": "0j270d0xx73dv3n2f5mjqm7mby7lqh6cp6gm1cz9z4xjrnn5lnni",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/6623aac94635324b54ad80327c5883896f4d519c.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/893ad96c18169bdd698330f6d76bf1d871a7adcc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pyGLFW": {
