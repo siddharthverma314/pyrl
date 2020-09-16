@@ -1,3 +1,4 @@
+{ cudaSupport ? true }:
 [
   # add sources
   (self: super: {
@@ -24,33 +25,25 @@
       lapack = super.lapack.override { lapackProvider = super.mkl; };
 
       pytorch = python-super.pytorch.override {
+        inherit cudaSupport;
         openMPISupport = true;
-        cudaSupport = true;
       };
 
       opencv3 = python-super.opencv3.override {
-        enableCuda = true;
+        enableCuda = cudaSupport;
         enableFfmpeg = true;
       };
 
       opencv4 = python-super.opencv4.override {
-        enableCuda = true;
+        enableCuda = cudaSupport;
         enableFfmpeg = true;
       };
 
-      mujoco-py_cpu = python-super.callPackage ./mujoco_py.nix {
+      mujoco-py = python-super.callPackage ./mujoco_py.nix {
+        inherit cudaSupport;
         mesa = super.mesa;
-        cudaSupport = false;
         mjKeyPath = ~/secrets/mjkey.txt;
       };
-
-      mujoco-py_gpu = python-super.callPackage ./mujoco_py.nix {
-        mesa = super.mesa;
-        cudaSupport = true;
-        mjKeyPath = ~/secrets/mjkey.txt;
-      };
-
-      mujoco-py = mujoco-py_gpu;
 
       cpprb = python-super.callPackage ./cpprb.nix {};
 
