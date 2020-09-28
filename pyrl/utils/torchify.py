@@ -10,12 +10,9 @@ def torchify(obs, device="cpu"):
             if (tv := torchify(v, device)) is not None:
                 ret[k] = tv
         return ret
-    if isinstance(obs, np.ndarray):
-        obs = torch.tensor(obs).float()
-    elif isinstance(obs, numbers.Number):
-        obs = torch.tensor(obs).float()
-    elif not isinstance(obs, torch.Tensor):
-        return None
+    obs = torch.tensor(obs)
+    if obs.dtype != torch.int64 or obs.dtype != torch.int32:
+        obs = obs.float()
     while obs.dim() < 2:
         obs = obs.unsqueeze(0)
     return obs.to(device)
