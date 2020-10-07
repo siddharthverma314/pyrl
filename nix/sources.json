@@ -5,10 +5,10 @@
         "homepage": null,
         "owner": "ymd-h",
         "repo": "cpprb",
-        "rev": "0224c8ea989316390300dd12962472baab35f355",
-        "sha256": "0dz2df2ayrgp675n629gf1j4qcvzs40ciqiicn50ikdsh7xd0chf",
+        "rev": "5afd54beed6b4190e8e9b1915e50fa49202ef707",
+        "sha256": "05rjblag2ab3bj0ilvjxd3incbrv191zvji6xy38za34cg40dasw",
         "type": "tarball",
-        "url": "https://github.com/ymd-h/cpprb/archive/0224c8ea989316390300dd12962472baab35f355.tar.gz",
+        "url": "https://github.com/ymd-h/cpprb/archive/5afd54beed6b4190e8e9b1915e50fa49202ef707.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "flatten-dict": {
@@ -17,10 +17,10 @@
         "homepage": "",
         "owner": "ianlini",
         "repo": "flatten-dict",
-        "rev": "f1a254435042709538a84a0aaa30aed784b266da",
-        "sha256": "1ppg0c253cb9cjxi1pp5v00biwnawl62wjlrjpqvyca08lbl6c8x",
+        "rev": "9aa848e1edc7d10ea057fd9451dcae9e06191238",
+        "sha256": "1558csfrssc171alk9paxfkbdps05wp809n5hiva4p9rir28msh5",
         "type": "tarball",
-        "url": "https://github.com/ianlini/flatten-dict/archive/f1a254435042709538a84a0aaa30aed784b266da.tar.gz",
+        "url": "https://github.com/ianlini/flatten-dict/archive/9aa848e1edc7d10ea057fd9451dcae9e06191238.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "gitignore": {
@@ -59,10 +59,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "dd13098d01eaa6be68237e7e38f96782b0480755",
-        "sha256": "1cfjdbsn0219fjzam1k7nqzkz8fb1ypab50rhyj026qbklqq2kvq",
+        "rev": "9d35b9e4837ab88517210b1701127612c260eccf",
+        "sha256": "0q50xhnm8g2yfyakrh0nly4swyygxpi0a8cb9gp65wcakcgvzvdh",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/dd13098d01eaa6be68237e7e38f96782b0480755.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/9d35b9e4837ab88517210b1701127612c260eccf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -71,10 +71,10 @@
         "homepage": null,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "893ad96c18169bdd698330f6d76bf1d871a7adcc",
-        "sha256": "0j270d0xx73dv3n2f5mjqm7mby7lqh6cp6gm1cz9z4xjrnn5lnni",
+        "rev": "502845c3e31ef3de0e424f3fcb09217df2ce6df6",
+        "sha256": "0fcqpsy6y7dgn0y0wgpa56gsg0b0p8avlpjrd79fp4mp9bl18nda",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/893ad96c18169bdd698330f6d76bf1d871a7adcc.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/502845c3e31ef3de0e424f3fcb09217df2ce6df6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pyGLFW": {
@@ -83,10 +83,10 @@
         "homepage": null,
         "owner": "FlorianRhiem",
         "repo": "pyGLFW",
-        "rev": "7b2db95290b94569777f249dcc38340514799f8c",
-        "sha256": "1c32lmbn94vp6q0y5rli2m442ql673dql83x1cikxb8gmcyavqbd",
+        "rev": "e988aa623a4a8da08b53f68246424306c4fa5982",
+        "sha256": "0pchs33jrrlgq8zcsv6xzll6gllylz99nibacfg4xxybhqsnrbc0",
         "type": "tarball",
-        "url": "https://github.com/FlorianRhiem/pyGLFW/archive/7b2db95290b94569777f249dcc38340514799f8c.tar.gz",
+        "url": "https://github.com/FlorianRhiem/pyGLFW/archive/e988aa623a4a8da08b53f68246424306c4fa5982.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "scikit-video": {

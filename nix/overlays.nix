@@ -7,12 +7,12 @@
 
   # top-level pkgs overlays
   (self: super: {
-    openmpi = super.openmpi.override { cudaSupport = true; };
+    openmpi = super.openmpi.override { inherit cudaSupport; };
 
     # batteries included :)
     ffmpeg = super.ffmpeg.override {
       nonfreeLicensing = true;
-      nvenc = true; # nvidia support
+      nvenc = cudaSupport; # nvidia support
     };
 
     gitignore = (super.callPackage super.sources.gitignore {}).gitignoreSource;
