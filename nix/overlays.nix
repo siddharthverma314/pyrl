@@ -1,4 +1,6 @@
-{ cudaSupport ? true }:
+{ cudaSupport ? true
+, python ? "python38"
+}:
 [
   # add sources
   (self: super: {
@@ -61,7 +63,7 @@
       scikit-video = python-super.callPackage ./scikit-video.nix {};
     };
 
-    python38 = super.python38.override { packageOverrides = pythonOverrides; };
-    python3 = python38;
+    "${python}" = super."${python}".override { packageOverrides = pythonOverrides; };
+    python3 = self."${python}";
   })
 ]
