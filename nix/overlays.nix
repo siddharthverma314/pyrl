@@ -9,8 +9,6 @@
 
   # top-level pkgs overlays
   (self: super: {
-    openmpi = super.openmpi.override { inherit cudaSupport; };
-
     # batteries included :)
     ffmpeg = super.ffmpeg.override {
       nonfreeLicensing = true;
@@ -28,7 +26,6 @@
 
       pytorch = python-super.pytorch.override {
         inherit cudaSupport;
-        openMPISupport = true;
       };
 
       opencv3 = python-super.opencv3.override {
