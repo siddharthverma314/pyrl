@@ -47,11 +47,12 @@
 
       cpprb = python-super.callPackage ./cpprb.nix {};
 
+      cloudpickle = python-super.callPackage ./cloudpickle.nix {};
+
       gym = python-super.gym.overrideAttrs (old: {
         postPatch = ''
           substituteInPlace setup.py \
             --replace "pyglet>=1.2.0,<=1.3.2" "pyglet" \
-            --replace "cloudpickle>=1.2.0,<1.4.0" "cloudpickle" \
         '';
       });
 
