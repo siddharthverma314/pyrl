@@ -26,6 +26,7 @@
 
       pytorch = python-super.pytorch.override {
         inherit cudaSupport;
+        tensorflow-tensorboard = python-super.tensorflow-tensorboard_2;
       };
 
       opencv3 = python-super.opencv3.override {

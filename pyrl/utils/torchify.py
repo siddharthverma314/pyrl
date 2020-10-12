@@ -7,7 +7,8 @@ def torchify(obs, device="cpu"):
     if isinstance(obs, dict):
         ret = {}
         for k, v in obs.items():
-            if (tv := torchify(v, device)) is not None:
+            tv = torchify(v, device)
+            if tv is not None:
                 ret[k] = tv
         return ret
     obs = torch.tensor(obs)
