@@ -1,0 +1,141 @@
+{
+  "nodes": {
+    "cpprb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1601723972,
+        "narHash": "sha256-XKsGyGNkqI+G7ybK/UMKOy9m42hdbhqBXGMp8RRdMhc=",
+        "owner": "ymd-h",
+        "repo": "cpprb",
+        "rev": "5afd54beed6b4190e8e9b1915e50fa49202ef707",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ymd-h",
+        "repo": "cpprb",
+        "type": "github"
+      }
+    },
+    "flatten-dict": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1603705134,
+        "narHash": "sha256-8Bo88S9fFEeD83tZYNXxibCyNy/3rWdIi8h5DOMpUlM=",
+        "owner": "ianlini",
+        "repo": "flatten-dict",
+        "rev": "40974bfb0f01b09edc1b8181801f86a183326557",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ianlini",
+        "repo": "flatten-dict",
+        "type": "github"
+      }
+    },
+    "gitignore": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1594969032,
+        "narHash": "sha256-nbZfz02QoVe1yYK7EtCV7wMi4VdHzZEoPg20ZSDo9to=",
+        "owner": "hercules-ci",
+        "repo": "gitignore",
+        "rev": "c4662e662462e7bf3c2a968483478a665d00e717",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore",
+        "type": "github"
+      }
+    },
+    "mujoco": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-MPgOCgKi56dxtItMHH6mTIxxgRnRwOMgBR06Icm9Icw=",
+        "type": "tarball",
+        "url": "https://www.roboti.us/download/mjpro150_linux.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://www.roboti.us/download/mjpro150_linux.zip"
+      }
+    },
+    "mujoco-py": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1595825981,
+        "narHash": "sha256-Pj+2UTDRiicQB/2rui6V/4I75SWuJe6gnQO1XitO4aM=",
+        "owner": "siddharthverma314",
+        "repo": "mujoco-py",
+        "rev": "84f0279f9a78cf1f36f47ac9f8871042b59846a4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "siddharthverma314",
+        "repo": "mujoco-py",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1605137723,
+        "narHash": "sha256-yo5aNHEhRK0IYw2IwE9tL0r9jVV1llHZRjN4fcyY2Lg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "a94cc8dc921112051cd477e4ded922acfd254fbe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "pyGLFW": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1601818382,
+        "narHash": "sha256-gK1sNYbL906eY2pFm9KnntJnKP3dbM0+wo/mLMfQkF0=",
+        "owner": "FlorianRhiem",
+        "repo": "pyGLFW",
+        "rev": "e988aa623a4a8da08b53f68246424306c4fa5982",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FlorianRhiem",
+        "repo": "pyGLFW",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "cpprb": "cpprb",
+        "flatten-dict": "flatten-dict",
+        "gitignore": "gitignore",
+        "mujoco": "mujoco",
+        "mujoco-py": "mujoco-py",
+        "nixpkgs": "nixpkgs",
+        "pyGLFW": "pyGLFW",
+        "scikit-video": "scikit-video"
+      }
+    },
+    "scikit-video": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1579047333,
+        "narHash": "sha256-bwRMC6c/g0RWoeR8DIbqdZSw5rULVrcwFgE8tQ+fWO0=",
+        "owner": "scikit-video",
+        "repo": "scikit-video",
+        "rev": "87c7113a84b50679d9853ba81ba34b557f516b05",
+        "type": "github"
+      },
+      "original": {
+        "owner": "scikit-video",
+        "repo": "scikit-video",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

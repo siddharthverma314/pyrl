@@ -31,15 +31,21 @@
     nixpkgs.url = github:NixOS/nixpkgs;
   };
   outputs = inputs: let
-    pkgs_cpu_py38 = import ./nix/nixpkgs.nix { inherit inputs; cudaSupport = false; python = "python38"; };
-    pkgs_gpu_py38 = import ./nix/nixpkgs.nix { inherit inputs; cudaSupport = true; python = "python38"; };
-    pkgs_cpu_py37 = import ./nix/nixpkgs.nix { inherit inputs; cudaSupport = false; python = "python37"; };
-    pkgs_gpu_py37 = import ./nix/nixpkgs.nix { inherit inputs; cudaSupport = true; python = "python37"; };
-  in
-    {
-      pkgs_cpu_py38 = import default.nix { pkgs = pkgs_cpu_py38; };
-      pkgs_gpu_py38 = import default.nix { pkgs = pkgs_gpu_py38; };
-      pkgs_cpu_py37 = import default.nix { pkgs = pkgs_cpu_py37; };
-      pkgs_gpu_py37 = import default.nix { pkgs = pkgs_gpu_py37; };
-    }
+    mkPkg = cudaSupport: python: let
+      pkgs = import ./nix/nixpkgs.nix {
+        inherit inputs;
+        cudaSupport = false;
+        python = "python38";
+      };
+    in
+      pkgs.python3Packages.callPackage ./derivation.nix {};
+
+    pkgs_cpu_py37 = mkPkg false "python37";
+    pkgs_gpu_py37 = mkPkg true "python37";
+    pkgs_cpu_py38 = mkPkg false "python38";
+    pkgs_gpu_py38 = mkPkg true "python38";
+  in {
+    packages.x86_64-linux = { inherit pkgs_cpu_py37 pkgs_cpu_py38 pkgs_gpu_py37 pkgs_gpu_py38; };
+    defaultPackage.x86_64-linux = pkgs_gpu_py38;
+  };
 }
