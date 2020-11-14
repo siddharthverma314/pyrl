@@ -28,5 +28,6 @@
     packages.x86_64-linux = builtins.mapAttrs (_: v: v.pkg) packages;
     defaultPackage.x86_64-linux = packages.py38_gpu.pkg;
     devShell.x86_64-linux = packages.py38_gpu.dev;
+    nixpkgs = inputs.nixpkgs;
   };
 }
