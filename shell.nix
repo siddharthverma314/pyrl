@@ -1,12 +1,15 @@
-let
-  pkgs = import ./nix/nixpkgs.nix {};
-  pyrl = pkgs.python3Packages.callPackage ./default.nix {};
-in
+{ pkgs, pkg }:
 pkgs.mkShell {
-  buildInputs = pyrl.pkg.propagatedBuildInputs ++ [
-    pyrl.dev
+  buildInputs = [
+    pkgs.python-language-server
+    (pkgs.python3.withPackages (ps: with ps; [
+      pkg
+      pyls-black
+      ipdb
+      rope
+      pyflakes
+      pytest
+      tensorflow-tensorboard_2
+    ]))
   ];
-  shellHook = ''
-    export PYTHONPATH=$PYTHONPATH:$PWD
-  '';
 }

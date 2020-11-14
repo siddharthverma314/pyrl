@@ -1,10 +1,11 @@
 { cudaSupport ? true
 , python ? "python38"
+, inputs
 }:
 [
   # add sources
   (self: super: {
-    sources = import ./sources.nix;
+    sources = inputs;
   })
 
   # top-level pkgs overlays
