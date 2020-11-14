@@ -1,5 +1,5 @@
 { buildPythonPackage
-, pytorch-bin
+, pytorch
 , gym
 , cpprb
 , flatten-dict
@@ -15,7 +15,7 @@ buildPythonPackage rec {
   src = gitignore ./.;
 
   propagatedBuildInputs = [
-    pytorch-bin
+    pytorch
     gym
     cpprb
     flatten-dict
