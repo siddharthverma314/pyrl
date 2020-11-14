@@ -1,7 +1,6 @@
 { pkgs, pkg }:
-pkgs.buildEnv {
-  name = "pyrl-dev";
-  paths = [
+pkgs.mkShell {
+  buildInputs = [
     pkgs.python-language-server
     (pkgs.python3.withPackages (ps: with ps; [
       pkg
