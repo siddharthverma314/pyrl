@@ -1,4 +1,4 @@
-{ pkgs, pkg, name, diskSize = 1024 * 20, cudaSupport ? false }:
+{ pkgs, pkg, name, diskSize ? 1024 * 20, cudaSupport ? false }:
 pkgs.dockerTools.buildImage {
   inherit name diskSize;
   contents = [pkgs.bashInteractive pkg];
@@ -9,4 +9,4 @@ pkgs.dockerTools.buildImage {
   config = if cudaSupport then {
     Env = ["NVIDIA_DRIVER_CAPABILITIES=compute,utility" "NVIDIA_VISIBLE_DEVICES=all"];
   } else {};
-};
+}
