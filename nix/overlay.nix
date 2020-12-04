@@ -24,6 +24,8 @@ final: prev: {
       tensorflow-tensorboard = python-super.tensorflow-tensorboard_2;
     };
 
+    pytorch-bin = python-super.callPackage ./pytorch-bin.nix {};
+
     opencv3 = python-super.opencv3.override {
       enableCuda = cudaSupport;
       enableFfmpeg = true;
