@@ -41,9 +41,9 @@ final: prev: {
       mesa = prev.mesa;
     };
 
-    cpprb = python-super.callPackage ./cpprb.nix {};
+    cpprb = python-self.callPackage ./cpprb.nix {};
 
-    cloudpickle = python-super.callPackage ./cloudpickle.nix {};
+    cloudpickle = python-self.callPackage ./cloudpickle.nix {};
 
     gym = python-super.gym.overrideAttrs (old: {
       postPatch = ''
@@ -53,9 +53,9 @@ final: prev: {
     });
 
     # self-made packages
-    glfw = python-super.callPackage ./glfw.nix {};
-    flatten-dict = python-super.callPackage ./flatten-dict.nix {};
-    scikit-video = python-super.callPackage ./scikit-video.nix {};
+    glfw = python-self.callPackage ./glfw.nix {};
+    flatten-dict = python-self.callPackage ./flatten-dict.nix {};
+    scikit-video = python-self.callPackage ./scikit-video.nix {};
   };
 
   "${python}" = prev."${python}".override {
