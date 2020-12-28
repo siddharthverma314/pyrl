@@ -5,9 +5,11 @@ from .one_hot_transform import OneHot, UnOneHot
 
 class OneHotFlatten(Transform):
     def __init__(self, space):
-        self.one_hot = OneHot(space)
-        self.flatten = Flatten(self.one_hot.after_space)
-        super().__init__(self.one_hot.before_space, self.flatten.after_space)
+        one_hot = OneHot(space)
+        flatten = Flatten(one_hot.after_space)
+        super().__init__(one_hot.before_space, flatten.after_space)
+        self.one_hot = one_hot
+        self.flatten = flatten
 
     def forward(self, x):
         return self.flatten(self.one_hot(x))
@@ -15,9 +17,11 @@ class OneHotFlatten(Transform):
 
 class UnOneHotUnflatten(Transform):
     def __init__(self, space):
-        self.unflatten = Unflatten(space)
-        self.un_one_hot = UnOneHot(self.unflatten.after_space)
-        super().__init__(self.unflatten.before_space, self.un_one_hot.after_space)
+        un_one_hot = UnOneHot(space)
+        unflatten = Unflatten(un_one_hot.before_space)
+        super().__init__(unflatten.before_space, un_one_hot.after_space)
+        self.unflatten = unflatten
+        self.un_one_hot = un_one_hot
 
     def forward(self, x):
         return self.un_one_hot(self.unflatten(x))

@@ -1,8 +1,9 @@
 { pkgs, pkg }:
 pkgs.mkShell {
-  buildInputs = [
-    pkgs.nodePackages.pyright
-    (pkgs.python3.withPackages (ps: with ps; [
+  buildInputs = with pkgs; [
+    nodePackages.pyright
+    ripgrep
+    (python3.withPackages (ps: with ps; [
       black
       pkg
       ipdb

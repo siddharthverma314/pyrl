@@ -6,7 +6,7 @@ import numpy as np
 untorchified = Union[np.ndarray, dict]
 torchified = Union[torch.Tensor, dict]
 
-def torchify(obs: untorchified, device: Union[str, torch.Device] = "cpu") -> torchified:
+def torchify(obs: untorchified, device: Union[str, torch.device] = "cpu") -> torchified:
     if isinstance(obs, dict):
         ret = {}
         for k, v in obs.items():

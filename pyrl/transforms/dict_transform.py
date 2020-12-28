@@ -1,3 +1,4 @@
+from typing import List
 from .base import Transform
 from collections import OrderedDict
 from gym.spaces import Tuple, Dict, Space
@@ -8,11 +9,11 @@ import gym
 
 def flatten_space(space: Space) -> Tuple:
     if isinstance(space, Tuple):
-        return Tuple(sum([flatten_space(s) for s in space.spaces], []))
+        return Tuple(sum([flatten_space(s).spaces for s in space.spaces], []))
     elif isinstance(space, Dict):
-        return Tuple(sum([flatten_space(s) for s in space.spaces.values()], []))
+        return Tuple(sum([flatten_space(s).spaces for s in space.spaces.values()], []))
     else:
-        return Tuple(space)
+        return Tuple([space])
 
 
 class Flatten(Transform):
@@ -62,4 +63,4 @@ class Unflatten(Transform):
             return x
 
     def forward(self, x):
-        return self.unflatten(self.space, x)
+        return self.unflatten(self.after_space, x)
