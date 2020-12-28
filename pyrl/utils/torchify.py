@@ -1,9 +1,12 @@
+from typing import Union
 import torch
 import numbers
 import numpy as np
 
+untorchified = Union[np.ndarray, dict]
+torchified = Union[torch.Tensor, dict]
 
-def torchify(obs, device="cpu"):
+def torchify(obs: untorchified, device: Union[str, torch.Device] = "cpu") -> torchified:
     if isinstance(obs, dict):
         ret = {}
         for k, v in obs.items():
@@ -19,7 +22,7 @@ def torchify(obs, device="cpu"):
     return obs.to(device)
 
 
-def untorchify(obs):
+def untorchify(obs: torchified) -> untorchified:
     if isinstance(obs, dict):
         return {k: untorchify(v) for k, v in obs.items()}
     obs = obs.detach().cpu()

@@ -24,9 +24,9 @@ class ReplayBuffer:
         self.act_unflat = Unflatten(act_spec)
 
         spec = {
-            "obs": {"dtype": np.float32, "shape": self.obs_flat.dim},
-            "act": {"dtype": np.float32, "shape": self.act_flat.dim},
-            "next_obs": {"dtype": np.float32, "shape": self.obs_flat.dim},
+            "obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
+            "act": {"dtype": np.float32, "shape": self.act_flat.after_dim},
+            "next_obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
             "rew": {"dtype": np.float32, "shape": 1},
             "done": {"dtype": np.float32, "shape": 1},
         }

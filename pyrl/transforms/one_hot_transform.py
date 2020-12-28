@@ -1,4 +1,4 @@
-from torch.nn import Module
+from .base import Transform
 from torch.functional import F
 import numpy as np
 import torch
@@ -39,27 +39,21 @@ def unonehotdim(space: gym.Space) -> int:
     else:
         raise NotImplementedError
 
+def one_hot_space(space) -> gym.Space:
+    if isinstance(space, Tuple):
+        return Tuple([one_hot_space(s) for s in space.spaces])
+    elif isinstance(space, Dict):
+        return Dict({k: one_hot_space(v) for k, v in space.spaces.items()})
+    elif isinstance(space, MultiDiscrete) or isinstance(space, Discrete):
+        dim = onehotdim(space)
+        return Box(np.zeros(dim, dtype=np.float32), np.ones(dim, dtype=np.float32))
+    else:
+        return space
 
-class OneHot(Module):
+
+class OneHot(Transform):
     def __init__(self, space):
-        super().__init__()
-
-        self.before_space = space
-        self.after_space = self.one_hot_space(space)
-
-        self.dim = onehotdim(self.after_space)
-
-    @staticmethod
-    def one_hot_space(space):
-        if isinstance(space, Tuple):
-            return Tuple([OneHot.one_hot_space(s) for s in space.spaces])
-        elif isinstance(space, Dict):
-            return Dict({k: OneHot.one_hot_space(v) for k, v in space.spaces.items()})
-        elif isinstance(space, MultiDiscrete) or isinstance(space, Discrete):
-            dim = onehotdim(space)
-            return Box(np.zeros(dim, dtype=np.float32), np.ones(dim, dtype=np.float32))
-        else:
-            return space
+        super().__init__(space, one_hot_space(space))
 
     @staticmethod
     def one_hot(space, x):
@@ -83,11 +77,9 @@ class OneHot(Module):
         return self.one_hot(self.before_space, x)
 
 
-class UnOneHot(Module):
+class UnOneHot(Transform):
     def __init__(self, space):
-        super().__init__()
-        self.after_space = space
-        self.dim = unonehotdim(self.after_space)
+        super().__init__(one_hot_space(space), space)
 
     @staticmethod
     def un_one_hot(space, x):
