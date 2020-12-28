@@ -1,10 +1,10 @@
 { pkgs, pkg }:
 pkgs.mkShell {
   buildInputs = [
-    pkgs.python-language-server
+    pkgs.nodePackages.pyright
     (pkgs.python3.withPackages (ps: with ps; [
+      black
       pkg
-      pyls-black
       ipdb
       rope
       pyflakes

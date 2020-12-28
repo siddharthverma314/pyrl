@@ -1,7 +1,8 @@
+from __future__ import annotations
 import cpprb
 import torch
 import numpy as np
-from gym import Space
+from gym import Space, Env
 from pyrl.logger import simpleloggable
 from pyrl.utils import untorchify, torchify
 from pyrl.transforms import Flatten, Unflatten
@@ -13,9 +14,9 @@ class ReplayBuffer:
         self,
         obs_spec: Space,
         act_spec: Space,
-        _capacity: int,
-        _batch_size: int,
-        _device: str,
+        _capacity: int = int(1e6),
+        _batch_size: int = 128,
+        _device: str = "cpu",
     ):
         self.obs_flat = Flatten(obs_spec)
         self.obs_unflat = Unflatten(obs_spec)
@@ -34,10 +35,14 @@ class ReplayBuffer:
         self.batch_size = _batch_size
         self.device = torch.device(_device)
 
+    @staticmethod
+    def from_env(env: Env, **kwargs) -> ReplayBuffer:
+        return ReplayBuffer(env.observation_space, env.action_space)
+
     def __len__(self):
         return len(self.buffer)
 
-    def add(self, batch):
+    def add(self, batch: dict):
         self.buffer.add(
             **untorchify(
                 {
