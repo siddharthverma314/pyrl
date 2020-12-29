@@ -25,9 +25,11 @@ def torchify(obs: untorchified, device: Union[str, torch.device] = "cpu") -> tor
 def untorchify(obs: torchified) -> untorchified:
     if isinstance(obs, dict):
         return {k: untorchify(v) for k, v in obs.items()}
-    obs = obs.detach().cpu()
-    if torch.is_floating_point(obs):
-        obs = obs.squeeze(0)
-    else:
-        obs = obs.squeeze()
-    return obs.numpy()
+    elif isinstance(obs, torch.Tensor):
+        obs = obs.detach().cpu()
+        if torch.is_floating_point(obs):
+            obs = obs.squeeze(0)
+        else:
+            obs = obs.squeeze()
+        return obs.numpy()
+    return obs
