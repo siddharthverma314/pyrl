@@ -1,47 +1,24 @@
-from torch.nn import Module
+from typing import List
+from .base import Transform
 from collections import OrderedDict
+from gym.spaces import Tuple, Dict, Space
+from .base import flatdim
 import numpy as np
 import torch
 import gym
-from gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 
-
-def flatdim(space: gym.Space) -> int:
-    """Return the number of dimensions a flattened equivalent of this space
-    would have.
-    """
-
-    if isinstance(space, Box):
-        return int(np.prod(space.shape))
-    elif isinstance(space, Discrete):
-        return 1
-    elif isinstance(space, Tuple):
-        return int(sum([flatdim(s) for s in space.spaces]))
+def flatten_space(space: Space) -> Tuple:
+    if isinstance(space, Tuple):
+        return Tuple(sum([flatten_space(s).spaces for s in space.spaces], []))
     elif isinstance(space, Dict):
-        return int(sum([flatdim(s) for s in space.spaces.values()]))
-    elif isinstance(space, MultiBinary):
-        return int(space.n)
-    elif isinstance(space, MultiDiscrete):
-        return len(space.nvec)
+        return Tuple(sum([flatten_space(s).spaces for s in space.spaces.values()], []))
     else:
-        raise NotImplementedError
+        return Tuple([space])
 
 
-class Flatten(Module):
+class Flatten(Transform):
     def __init__(self, space):
-        super().__init__()
-        self.before_space = space
-        self.after_space = Tuple(self.flatten_space(space))
-        self.dim = flatdim(space)
-
-    @staticmethod
-    def flatten_space(space):
-        if isinstance(space, Tuple):
-            return sum([Flatten.flatten_space(s) for s in space.spaces], [])
-        elif isinstance(space, Dict):
-            return sum([Flatten.flatten_space(s) for s in space.spaces.values()], [])
-        else:
-            return [space]
+        super().__init__(space, flatten_space(space))
 
     @staticmethod
     def flatten(space, x):
@@ -60,11 +37,9 @@ class Flatten(Module):
         return self.flatten(self.before_space, x)
 
 
-class Unflatten(torch.nn.Module):
-    def __init__(self, space):
-        super().__init__()
-        self.space = space
-        self.dim = flatdim(self.space)
+class Unflatten(Transform):
+    def __init__(self, space: Space):
+        super().__init__(flatten_space(space), space)
 
     @staticmethod
     def unflatten(space, x):
@@ -88,4 +63,4 @@ class Unflatten(torch.nn.Module):
             return x
 
     def forward(self, x):
-        return self.unflatten(self.space, x)
+        return self.unflatten(self.after_space, x)

@@ -6,7 +6,7 @@ from pyrl.logger import Loggable
 class MLP(nn.Module, Loggable):
     """Defines a standard Multi Layer Perceptron"""
 
-    def __init__(self, input_dim: int, hidden_dim: List[int], output_dim: int,) -> None:
+    def __init__(self, input_dim: int, hidden_dim: List[int], output_dim: int) -> None:
         nn.Module.__init__(self)
         Loggable.__init__(self)
 

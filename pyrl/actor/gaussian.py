@@ -24,7 +24,9 @@ class GaussianActor(BaseActor):
         self.act_unflat = Unflatten(act_spec)
 
         self.log_std_bounds = _log_std_bounds
-        self.policy = MLP(self.obs_flat.dim, hidden_dim, self.act_flat.dim * 2)
+        self.policy = MLP(
+            self.obs_flat.after_dim, hidden_dim, self.act_flat.after_dim * 2
+        )
 
     def _get_dist(self, obs):
         # get mu and log_std

@@ -6,7 +6,7 @@ default:
 	make pushcachix
 
 nocachix:
-	nix build -f default.nix pkg dev --max-jobs $(JOBS)
+	nix build --max-jobs $(JOBS)
 
 pushcachix:
-	nix-build default.nix | cachix push pyrl -j $(JOBS)
+	nix path-info | cachix push pyrl -j $(JOBS)

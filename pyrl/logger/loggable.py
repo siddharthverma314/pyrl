@@ -7,9 +7,7 @@ import abc
 
 
 class BaseLoggable(abc.ABC):
-    """Most basic loggable class. No assumptions about structure.
-
-    """
+    """Most basic loggable class. No assumptions about structure."""
 
     @abc.abstractmethod
     def log_epoch(self) -> dict:
@@ -90,10 +88,20 @@ def simpleloggable(cls):
         def __init__(self, *args, **kwargs):
             cls.__init__(self, *args, **kwargs)
             Loggable.__init__(self)
-            args = inspect.signature(super().__init__).bind(*args, **kwargs).arguments
-            self.__log_hyperparams = {
-                k[1:]: v for k, v in args.items() if k.startswith("_")
-            }
+
+            # set hyperparms
+            if "_hyperparams" not in self.__dict__:
+                self._hyperparams = {}
+            # local hyperparams
+            args = inspect.signature(cls.__init__).bind(self, *args, **kwargs).arguments
+            self._hyperparams.update(
+                {k[1:]: v for k, v in args.items() if k.startswith("_")}
+            )
+            # parent hyperparams
+            if Loggable in cls.mro():
+                self._hyperparams.update(cls.log_hyperparams(self))
+
+            self._args = (args, kwargs)
             self.__log_epoch = {}
 
         def log(self, name, val: object) -> None:
@@ -108,7 +116,7 @@ def simpleloggable(cls):
             self.__log_epoch[name] = val
 
         def log_local_hyperparams(self):
-            return self.__log_hyperparams
+            return self._hyperparams
 
         def log_local_epoch(self):
             return self.__log_epoch

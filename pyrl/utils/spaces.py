@@ -1,8 +1,8 @@
 import numpy as np
-from gym.spaces import Dict, Discrete, MultiDiscrete, Box
+from gym.spaces import Dict, Discrete, MultiDiscrete, Box, Space
 
 
-def create_random_space():
+def create_random_space() -> Space:
     "Create a random space that might be nested. Mostly for testing."
 
     choice = np.random.randint(4)
