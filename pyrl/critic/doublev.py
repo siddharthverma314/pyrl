@@ -16,8 +16,8 @@ class DoubleVCritic(nn.Module):
 
         self.obs_flat = OneHotFlatten(obs_spec)
 
-        self.vf_1 = MLP(self.obs_flat.dim, hidden_dim, 1)
-        self.vf_2 = MLP(self.obs_flat.dim, hidden_dim, 1)
+        self.vf_1 = MLP(self.obs_flat.after_dim, hidden_dim, 1)
+        self.vf_2 = MLP(self.obs_flat.after_dim, hidden_dim, 1)
 
     def double_v(self, obs):
         obs = self.obs_flat(obs)

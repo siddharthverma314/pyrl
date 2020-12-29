@@ -19,8 +19,12 @@ class DoubleQCritic(nn.Module):
         self.obs_flat = OneHotFlatten(obs_spec)
         self.act_flat = OneHotFlatten(action_spec)
 
-        self.qf_1 = MLP(self.obs_flat.dim + self.act_flat.dim, hidden_dim, 1)
-        self.qf_2 = MLP(self.obs_flat.dim + self.act_flat.dim, hidden_dim, 1)
+        self.qf_1 = MLP(
+            self.obs_flat.after_dim + self.act_flat.after_dim, hidden_dim, 1
+        )
+        self.qf_2 = MLP(
+            self.obs_flat.after_dim + self.act_flat.after_dim, hidden_dim, 1
+        )
 
     def double_q(self, obs, action):
         obs_action = torch.cat([self.obs_flat(obs), self.act_flat(action)], dim=-1)
