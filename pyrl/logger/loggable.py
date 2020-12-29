@@ -94,11 +94,12 @@ def simpleloggable(cls):
                 self._hyperparams = {}
             # local hyperparams
             args = inspect.signature(cls.__init__).bind(self, *args, **kwargs).arguments
-            self._hyperparams.update({k[1:]: v for k, v in args.items() if k.startswith("_")})
+            self._hyperparams.update(
+                {k[1:]: v for k, v in args.items() if k.startswith("_")}
+            )
             # parent hyperparams
             if Loggable in cls.mro():
                 self._hyperparams.update(cls.log_hyperparams(self))
-
 
             self._args = (args, kwargs)
             self.__log_epoch = {}
