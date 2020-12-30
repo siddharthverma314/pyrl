@@ -26,6 +26,7 @@ class ReplayBuffer:
         spec = {
             "obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
             "act": {"dtype": np.float32, "shape": self.act_flat.after_dim},
+            "index": {"dtype": np.int64, "shape": 1},
             "next_obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
             "rew": {"dtype": np.float32, "shape": 1},
             "done": {"dtype": np.float32, "shape": 1},
@@ -37,13 +38,16 @@ class ReplayBuffer:
 
     @staticmethod
     def from_env(env: Env, **kwargs) -> ReplayBuffer:
-        return ReplayBuffer(env.observation_space, env.action_space)
+        return ReplayBuffer(env.observation_space, env.action_space, **kwargs)
 
     def __len__(self):
         return len(self.buffer)
 
-    def add(self, batch: dict):
+    def add(self, batch: dict) -> None:
         self.buffer.add(
+            # HACK: Add in the indices since cpprb doesn't have
+            # sample_with_indices function
+            index=self.buffer.get_next_index() + np.arange(batch["rew"].shape[1]),
             **untorchify(
                 {
                     "obs": self.obs_flat(batch["obs"]),
@@ -52,18 +56,21 @@ class ReplayBuffer:
                     "rew": batch["rew"],
                     "done": batch["done"],
                 }
-            )
+            ),
         )
 
-    def sample(self, batch_size=None):
+    def sample(self, batch_size=None, with_index=False) -> dict:
         if not batch_size:
             batch_size = self.batch_size
 
-        batch = torchify(self.buffer.sample(batch_size), self.device)
-        return {
+        batch: dict = torchify(self.buffer.sample(batch_size), self.device)
+        result = {
             "obs": self.obs_unflat(batch["obs"]),
             "act": self.act_unflat(batch["act"]),
             "next_obs": self.obs_unflat(batch["next_obs"]),
             "rew": batch["rew"],
             "done": batch["done"],
         }
+        if with_index:
+            result["index"] = batch["index"]
+        return result
