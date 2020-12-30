@@ -1,4 +1,4 @@
-{ pkgs, pkg }:
+{ pkgs, pkg, pythonpaths ? [""] }:
 pkgs.mkShell {
   buildInputs = with pkgs; [
     nodePackages.pyright
@@ -13,4 +13,7 @@ pkgs.mkShell {
       tensorflow-tensorboard_2
     ]))
   ];
+  shellHook = ''
+    export PYTHONPATH=${pkgs.lib.concatStringsSep ":" (map (s: "$PWD/${s}") pythonpaths)}
+  '';
 }
