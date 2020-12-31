@@ -9,7 +9,10 @@ from pyrl.logger import Loggable
 
 class BaseSampler(Loggable):
     def __init__(
-        self, action_from_obs: Callable, _path_length: int, env: gym.Env,
+        self,
+        action_from_obs: Callable,
+        _path_length: int,
+        env: gym.Env,
     ) -> None:
         self.policy = action_from_obs
         self.path_length = _path_length
@@ -27,7 +30,8 @@ class BaseSampler(Loggable):
         self.env = prev_env
 
     def sample(
-        self, start_obs: Union[None, torch.Tensor] = None,
+        self,
+        start_obs: Union[None, torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, dict, torch.Tensor]:
         data = []
         obs = start_obs if start_obs else self.env.reset()

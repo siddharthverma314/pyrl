@@ -39,6 +39,7 @@ def unonehotdim(space: gym.Space) -> int:
     else:
         raise NotImplementedError
 
+
 def one_hot_space(space) -> gym.Space:
     if isinstance(space, Tuple):
         return Tuple([one_hot_space(s) for s in space.spaces])

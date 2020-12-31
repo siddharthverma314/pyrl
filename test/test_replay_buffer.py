@@ -41,8 +41,16 @@ def test_indices():
     buf = ReplayBuffer(space, space, BATCH_SIZE, BATCH_SIZE, "cpu")
     r = torch.arange(BATCH_SIZE)
     for i in range(0, BATCH_SIZE, STEP_SIZE):
-        mb = r[i*BATCH_SIZE:(i+1)*BATCH_SIZE].reshape(1, -1)
-        buf.add({"obs": mb, "act": mb, "rew": mb, "next_obs": mb, "done": torch.zeros_like(mb)})
+        mb = r[i * BATCH_SIZE : (i + 1) * BATCH_SIZE].reshape(1, -1)
+        buf.add(
+            {
+                "obs": mb,
+                "act": mb,
+                "rew": mb,
+                "next_obs": mb,
+                "done": torch.zeros_like(mb),
+            }
+        )
     for _ in range(STEP_SIZE):
         sample = buf.sample(BATCH_SIZE, True)
         assert torch.all(sample["obs"] == sample["index"])

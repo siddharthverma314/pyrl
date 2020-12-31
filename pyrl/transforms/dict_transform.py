@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import gym
 
+
 def flatten_space(space: Space) -> Tuple:
     if isinstance(space, Tuple):
         return Tuple(sum([flatten_space(s).spaces for s in space.spaces], []))
