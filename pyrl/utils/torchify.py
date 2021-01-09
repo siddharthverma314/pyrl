@@ -4,7 +4,7 @@ import numpy as np
 
 
 def torchify(
-    obs: Union[np.ndarray, dict], device: Union[str, torch.device] = "cpu"
+    obs: Union[np.ndarray, dict], device: torch.Device = "cpu"
 ) -> Union[torch.Tensor, dict]:
     if isinstance(obs, dict):
         ret = {}

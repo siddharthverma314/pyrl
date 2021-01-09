@@ -1,3 +1,4 @@
+from torch.tensor import Tensor
 from .base import Transform
 from .dict_transform import Flatten, Unflatten
 from .tanh_transform import TanhScaleTransform

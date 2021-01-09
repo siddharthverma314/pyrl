@@ -1,3 +1,7 @@
+from gym.spaces.space import Space
+from pyrl.transforms.space_helper import make_recursive
+from pyrl.types import NestedTensor
+from toolz.functoolz import compose
 from .base import Transform
 from torch.functional import F
 import numpy as np
@@ -5,16 +9,12 @@ import torch
 import gym
 from gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 
-
+@make_recursive(compose(int, sum))
 def onehotdim(space: gym.Space) -> int:
     if isinstance(space, Box):
         return int(np.prod(space.shape))
     elif isinstance(space, Discrete):
         return space.n
-    elif isinstance(space, Tuple):
-        return int(sum([onehotdim(s) for s in space.spaces]))
-    elif isinstance(space, Dict):
-        return int(sum([onehotdim(s) for s in space.spaces.values()]))
     elif isinstance(space, MultiBinary):
         return int(space.n)
     elif isinstance(space, MultiDiscrete):
@@ -22,16 +22,12 @@ def onehotdim(space: gym.Space) -> int:
     else:
         raise NotImplementedError
 
-
+@make_recursive(compose(int, sum))
 def unonehotdim(space: gym.Space) -> int:
     if isinstance(space, Box):
         return int(np.prod(space.shape))
     elif isinstance(space, Discrete):
         return 1
-    elif isinstance(space, Tuple):
-        return int(sum([unonehotdim(s) for s in space.spaces]))
-    elif isinstance(space, Dict):
-        return int(sum([unonehotdim(s) for s in space.spaces.values()]))
     elif isinstance(space, MultiBinary):
         return int(space.n)
     elif isinstance(space, MultiDiscrete):
@@ -57,7 +53,7 @@ class OneHot(Transform):
         super().__init__(space, one_hot_space(space))
 
     @staticmethod
-    def one_hot(space, x):
+    def one_hot(space: Space, x: NestedTensor):
         if isinstance(space, list) or isinstance(space, tuple):
             return tuple([OneHot.one_hot(s, xp) for s, xp in zip(space, x)])
         elif isinstance(space, Tuple):

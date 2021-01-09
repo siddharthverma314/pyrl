@@ -6,6 +6,7 @@
 , termcolor
 , pygments
 , tabulate
+, toolz
 , gitignore
 }:
 buildPythonPackage rec {
@@ -22,6 +23,7 @@ buildPythonPackage rec {
     termcolor
     pygments
     tabulate
+    toolz
   ];
 
   doCheck = false;

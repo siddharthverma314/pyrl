@@ -1,10 +1,11 @@
+from gym.spaces.space import Space
 from .base import Transform
 from .dict_transform import Flatten, Unflatten
 from .one_hot_transform import OneHot, UnOneHot
 
 
 class OneHotFlatten(Transform):
-    def __init__(self, space):
+    def __init__(self, space: Space):
         one_hot = OneHot(space)
         flatten = Flatten(one_hot.after_space)
         super().__init__(one_hot.before_space, flatten.after_space)
@@ -16,7 +17,7 @@ class OneHotFlatten(Transform):
 
 
 class UnOneHotUnflatten(Transform):
-    def __init__(self, space):
+    def __init__(self, space: Space):
         un_one_hot = UnOneHot(space)
         unflatten = Unflatten(un_one_hot.before_space)
         super().__init__(unflatten.before_space, un_one_hot.after_space)

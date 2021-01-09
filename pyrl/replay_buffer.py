@@ -1,5 +1,6 @@
 from __future__ import annotations
 import cpprb
+from pyrl.transforms.space_helper import NestedTensor
 import torch
 import numpy as np
 from gym import Space, Env
@@ -26,7 +27,6 @@ class ReplayBuffer:
         spec = {
             "obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
             "act": {"dtype": np.float32, "shape": self.act_flat.after_dim},
-            "index": {"dtype": np.int64, "shape": 1},
             "next_obs": {"dtype": np.float32, "shape": self.obs_flat.after_dim},
             "rew": {"dtype": np.float32, "shape": 1},
             "done": {"dtype": np.float32, "shape": 1},
@@ -59,18 +59,15 @@ class ReplayBuffer:
             ),
         )
 
-    def sample(self, batch_size=None, with_index=False) -> dict:
+    def sample(self, batch_size: int = None) -> NestedTensor:
         if not batch_size:
             batch_size = self.batch_size
 
-        batch: dict = torchify(self.buffer.sample(batch_size), self.device)
-        result = {
+        batch: NestedTensor = torchify(self.buffer.sample(batch_size), self.device)
+        return {
             "obs": self.obs_unflat(batch["obs"]),
             "act": self.act_unflat(batch["act"]),
             "next_obs": self.obs_unflat(batch["next_obs"]),
             "rew": batch["rew"],
             "done": batch["done"],
         }
-        if with_index:
-            result["index"] = batch["index"]
-        return result

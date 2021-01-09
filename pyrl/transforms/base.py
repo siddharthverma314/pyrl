@@ -1,19 +1,16 @@
-from typing import List
+from pyrl.transforms.space_helper import make_recursive
 from torch.nn import Module
-from abc import ABCMeta
-from gym.spaces import Space, Box, Discrete, Tuple, Dict, MultiBinary, MultiDiscrete
+from gym.spaces import Space, Box, Discrete, MultiBinary, MultiDiscrete
 import numpy as np
+from toolz import compose
 
 
+@make_recursive(compose(int, sum))
 def flatdim(space: Space) -> int:
     if isinstance(space, Box):
         return int(np.prod(space.shape))
     elif isinstance(space, Discrete):
         return 1
-    elif isinstance(space, Tuple):
-        return int(sum([flatdim(s) for s in space.spaces]))
-    elif isinstance(space, Dict):
-        return int(sum([flatdim(s) for s in space.spaces.values()]))
     elif isinstance(space, MultiBinary):
         return int(space.n)
     elif isinstance(space, MultiDiscrete):
