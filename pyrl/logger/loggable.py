@@ -1,7 +1,7 @@
-from typing import Dict
+from typing import Dict, Type, cast
+from pyrl.types import NestedDictTensor
 import torch
-
-from functools import wraps
+from torch.nn import Module
 import inspect
 import abc
 
@@ -10,19 +10,19 @@ class BaseLoggable(abc.ABC):
     """Most basic loggable class. No assumptions about structure."""
 
     @abc.abstractmethod
-    def log_epoch(self) -> dict:
+    def log_epoch(self) -> Dict[str, NestedDictTensor]:
         "Log the epoch parameters of the class"
 
     @abc.abstractmethod
-    def log_hyperparams(self) -> dict:
+    def log_hyperparams(self) -> Dict[str, NestedDictTensor]:
         "Log the hyperparameters of the class"
 
     @abc.abstractmethod
-    def log_snapshot(self) -> dict:
+    def log_snapshot(self) -> Dict[str, NestedDictTensor]:
         "Log a snapshot of the class"
 
     @abc.abstractmethod
-    def load_snapshot(self, snapshot: dict) -> None:
+    def load_snapshot(self, snapshot: Dict[str, NestedDictTensor]) -> None:
         "Reset from a snapshot logged by :self.log_snapshot:"
 
 
@@ -41,35 +41,38 @@ class Loggable(BaseLoggable):
         return {k: v for k, v in inspect.getmembers(self) if isinstance(v, Loggable)}
 
     @abc.abstractmethod
-    def log_local_hyperparams(self) -> Dict[str, object]:
+    def log_local_hyperparams(self) -> Dict[str, NestedDictTensor]:
         "Return the hyperparameters of the current object"
 
     @abc.abstractmethod
-    def log_local_epoch(self) -> Dict[str, object]:
+    def log_local_epoch(self) -> Dict[str, NestedDictTensor]:
         "Return logs at every epoch of the current object"
 
-    def log_hyperparams(self) -> dict:
+    def log_hyperparams(self) -> Dict[str, NestedDictTensor]:
         return {
             **{k: v.log_hyperparams() for k, v in self.log_collect().items()},
             **self.log_local_hyperparams(),
         }
 
-    def log_epoch(self) -> dict:
+    def log_epoch(self) -> Dict[str, NestedDictTensor]:
         return {
             **{k: v.log_epoch() for k, v in self.log_collect().items()},
             **self.log_local_epoch(),
         }
 
-    def log_snapshot(self) -> dict:
-        if isinstance(self, torch.nn.Module):
-            return {"state_dict": self.state_dict()}
+    def log_snapshot(self) -> Dict[str, NestedDictTensor]:
+        if isinstance(self, Module):
+            return {"state_dict": cast(Module, self).state_dict()}
         return {k: v.log_snapshot() for k, v in self.log_collect().items()}
 
     def load_snapshot(self, snapshot: dict) -> None:
-        raise NotImplementedError
+        if isinstance(self, Module):
+            return cast(Module, self).load_state_dict(snapshot)
+        for k, v in self.log_collect().items():
+            v.load_snapshot(snapshot[k])
 
 
-def simpleloggable(cls):
+def simpleloggable(cls) -> Type[Loggable]:
     """A class decorator for loggable objects.
 
     All function parameters in __init__ starting with an underscore
@@ -83,8 +86,9 @@ def simpleloggable(cls):
 
     """
 
-    # @wraps(cls)
     class newcls(cls, Loggable):
+        __name__ = cls.__name__
+
         def __init__(self, *args, **kwargs):
             cls.__init__(self, *args, **kwargs)
             Loggable.__init__(self)
