@@ -3,11 +3,11 @@
     "cpprb": {
       "flake": false,
       "locked": {
-        "lastModified": 1601723972,
-        "narHash": "sha256-XKsGyGNkqI+G7ybK/UMKOy9m42hdbhqBXGMp8RRdMhc=",
+        "lastModified": 1610176137,
+        "narHash": "sha256-nEbSbSJIIkbfQN8YlgGmTdYTgEfx1QWdXJHLA/ML91g=",
         "owner": "ymd-h",
         "repo": "cpprb",
-        "rev": "5afd54beed6b4190e8e9b1915e50fa49202ef707",
+        "rev": "82fa5508266041a49f8507bd1ab23956f03361ee",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1607660847,
-        "narHash": "sha256-hTjqlKirCgD8mhJHj5btJlhRdL3WTt2zi6x6MllDzwM=",
+        "lastModified": 1610133996,
+        "narHash": "sha256-01/qZqVRcSHbGnUwJW9pw4KP+iIWDjcljJs5zYsZ9H8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2c0f6135aab77ff942b615228882c7dd996e0882",
+        "rev": "e49e3a756b325ca47f31c11bddd296d807f2eca0",
         "type": "github"
       },
       "original": {
