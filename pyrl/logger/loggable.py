@@ -4,9 +4,12 @@ import torch
 from torch.nn import Module
 import inspect
 import abc
+from toolz.dicttoolz import merge, update_in
+from torch.nn.modules.module import Module
+from torch.tensor import Tensor
 
 
-class BaseLoggable(abc.ABC):
+class BaseLoggable():
     """Most basic loggable class. No assumptions about structure."""
 
     @abc.abstractmethod
@@ -26,12 +29,14 @@ class BaseLoggable(abc.ABC):
         "Reset from a snapshot logged by :self.log_snapshot:"
 
 
-class Loggable(BaseLoggable):
-    """The default loggable class. Assumes structure of parent and children.
+class Loggable(BaseLoggable, Module):
+    """The default loggable class. Assumes structure of parent and
+    children.
 
     The class defines log_local_* methods which are to be
-    overrided. Children are found via the log_collect method, and the
+    overriden. Children are found via the log_collect method, and the
     log_* methods are filled in using both these values.
+
     """
 
     def log_collect(self):
@@ -72,8 +77,8 @@ class Loggable(BaseLoggable):
             v.load_snapshot(snapshot[k])
 
 
-def simpleloggable(cls) -> Type[Loggable]:
-    """A class decorator for loggable objects.
+class SimpleLoggable(type):
+    """A MetaClass for loggable objects.
 
     All function parameters in __init__ starting with an underscore
     are logged as hyperparameters.
@@ -86,28 +91,7 @@ def simpleloggable(cls) -> Type[Loggable]:
 
     """
 
-    class newcls(cls, Loggable):
-        __name__ = cls.__name__
-
-        def __init__(self, *args, **kwargs):
-            cls.__init__(self, *args, **kwargs)
-            Loggable.__init__(self)
-
-            # set hyperparms
-            if "_hyperparams" not in self.__dict__:
-                self._hyperparams = {}
-            # local hyperparams
-            args = inspect.signature(cls.__init__).bind(self, *args, **kwargs).arguments
-            self._hyperparams.update(
-                {k[1:]: v for k, v in args.items() if k.startswith("_")}
-            )
-            # parent hyperparams
-            if Loggable in cls.mro():
-                self._hyperparams.update(cls.log_hyperparams(self))
-
-            self._args = (args, kwargs)
-            self.__log_epoch = {}
-
+    def __new__(mcls, name, classes, methods):
         def log(self, name, val: object) -> None:
             """Log an object per epoch.
 
@@ -119,10 +103,35 @@ def simpleloggable(cls) -> Type[Loggable]:
             """
             self.__log_epoch[name] = val
 
-        def log_local_hyperparams(self):
-            return self._hyperparams
+        def wrap_init(fn):
+            def new_init(self, *args, **kwargs):
+                Loggable.__init__(self)
+                args = inspect.signature(fn).parameters.keys()
 
-        def log_local_epoch(self):
-            return self.__log_epoch
+                fn(self, *args, **kwargs)
 
-    return newcls
+                # set hyperparms
+                self.__hyperparams = {}
+                # local hyperparams
+                args = inspect.signature(fn).bind(self, *args, **kwargs).arguments
+                self.__hyperparams.update(
+                    {k[1:]: v for k, v in args.items() if k.startswith("_")}
+                )
+
+                self.__log_epoch = {}
+
+            return new_init
+
+        return super(SimpleLoggable, mcls).__new__(
+            mcls,
+            name,
+            classes + (Loggable,),
+            merge(
+                update_in(methods, ["__init__"], wrap_init),
+                {
+                    "log_local_hyperparams": lambda self: self.__hyperparams,
+                    "log_local_epoch": lambda self: self.__log_epoch,
+                    "log": log,
+                },
+            ),
+        )
