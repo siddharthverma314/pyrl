@@ -1,9 +1,8 @@
-from pyrl.logger import simpleloggable
+from pyrl.logger import SimpleLoggable
 
 
 def test_loggable():
-    @simpleloggable
-    class Test:
+    class Test(metaclass=SimpleLoggable):
         def __init__(self, nolog, _log):
             pass
 
@@ -18,8 +17,7 @@ def test_loggable():
 
 
 def test_nested_loggable():
-    @simpleloggable
-    class Test1:
+    class Test1(metaclass=SimpleLoggable):
         def __init__(self, nolog1, _log1):
             pass
 
@@ -27,7 +25,6 @@ def test_nested_loggable():
             self.log("a1", 1)
             self.log("b1", 2)
 
-    @simpleloggable
     class Test2(Test1):
         def __init__(self, nolog2, _log2, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -37,7 +34,6 @@ def test_nested_loggable():
             self.log("a2", 3)
             self.log("b2", 4)
 
-    @simpleloggable
     class Test3(Test2):
         def __init__(self, nolog3, _log3, *args, **kwargs):
             super().__init__(*args, **kwargs)

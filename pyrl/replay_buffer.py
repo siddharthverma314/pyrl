@@ -1,6 +1,6 @@
 from __future__ import annotations
 import cpprb
-from pyrl.transforms.space_helper import NestedTensor
+from pyrl.types import NestedTensor
 import torch
 import numpy as np
 from gym import Space, Env
