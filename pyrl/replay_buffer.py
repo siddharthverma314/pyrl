@@ -47,7 +47,7 @@ class ReplayBuffer:
         self.buffer.add(
             # HACK: Add in the indices since cpprb doesn't have
             # sample_with_indices function
-            index=self.buffer.get_next_index() + np.arange(batch["rew"].shape[1]),
+            index=self.buffer.get_next_index() + np.arange(batch["rew"].shape[0]),
             **untorchify(
                 {
                     "obs": self.obs_flat(batch["obs"]),
