@@ -10,6 +10,7 @@ pkgs.mkShell {
       rope
       pyflakes
       pytest
+      snakeviz
       tensorflow-tensorboard_2
     ]))
   ];
